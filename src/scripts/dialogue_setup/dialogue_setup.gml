@@ -1,15 +1,10 @@
 // This script creates the data structures required for the dialog parsing process
 // Feel free to change these values or add new ones
 function dialogue_setup() {
-	#region Dialogue characters map
-	global.mapcharacter = ds_map_create();
-	global.mapcharacter[? "Narrator"] = 0;
-	global.mapcharacter[? "Template"] = 1;
-	global.mapcharacter[? "Template2"] = 2;
-	#endregion
 	#region Dialogue colours map
 	global.mapcolour = ds_map_create();
 	global.mapcolour[? "aqua"] = c_aqua;
+	global.mapcolour[? "black"] = c_black;
 	global.mapcolour[? "blue"] = c_blue;
 	global.mapcolour[? "darkgray"] = c_dkgray;
 	global.mapcolour[? "gray"] = c_gray;
@@ -32,8 +27,13 @@ function dialogue_setup() {
 	global.mapeffect[? "normal"] = 0;
 	global.mapeffect[? "shaking"] = 1;
 	#endregion
+	#region Dialogue layout map
+	global.maplayout = ds_map_create();
+	global.maplayout[? "default"] = -1;
+	#endregion
 	#region Dialogue text speed map
 	global.mapspeed = ds_map_create();
+	global.mapspeed[? "max"] = -1;
 	global.mapspeed[? "slow"] = 0.5;
 	global.mapspeed[? "normal"] = 1;
 	global.mapspeed[? "fast"] = 2;

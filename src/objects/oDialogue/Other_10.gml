@@ -10,7 +10,10 @@ if (msg_length == 0) {
 	exit;
 }
 
-char_count = 1;
+// A bunch of variables
+autoprocess = false;
+autoprocess_delay = 0;
+autoprocess_enabled = false;
 dialogue_is_paused = false;
 
 var questions_count = array_length(questions);
@@ -20,20 +23,24 @@ question_answers = [];
 options_count = 0;
 options_cursor = 0;
 
-colours = [];
-effects = [];
-textspeed = [];
-
+var breaks = 0;
 var colour = c_white;
 var effect = 0;
 var tspeed = 1;
 
+colours = array_create(msg_length, colour);
+effects	= array_create(msg_length, effect);
+textspeed = array_create(msg_length, tspeed);
+
+char_count = 1;
+
+// Parse dialogue commands
 for (var i = 1; i <= msg_length; i++) {
 	var char = string_char_at(msg, i);
 	
 	if (char == "[") {
 		var command_valid = false;
-		var command_length = string_pos("]", msg) - i - 1;
+		var command_length = string_pos("]", string_copy(msg, i, msg_length - i + 1)) - 2;
 		// Temporary variable, will be split and removed
 		var _command = string_copy(msg, i + 1, command_length);
 		
@@ -57,14 +64,25 @@ for (var i = 1; i <= msg_length; i++) {
 				command_valid = true;
 			break;
 			
+			case "auto": // Autoprocess
+				var delay = string_digits(values[1]);
+				autoprocess_delay = delay == "" ? -1 : real(delay);
+				autoprocess_enabled = true;
+				command_valid = true;
+			break;
+			
 			case "c":
 			case "col":
 			case "color":
 			case "colour": // Sets text colour
-				colour = global.mapcolour[? values[1]];
-				if (is_undefined(colour)) colour = c_white;
-				
-				command_valid = true;
+				if (values_count == 4) { // Parging rgb/hsv colour
+					colour = make_colour_unsafe_strings(values[1], values[2], values[3], values[4]);
+					command_valid = true;
+				} else { // Picking predefined colour
+					colour = global.mapcolour[? values[1]];
+					if (is_undefined(colour)) colour = c_white;
+					command_valid = true;
+				}
 			break;
 			
 			case "e":
@@ -72,19 +90,16 @@ for (var i = 1; i <= msg_length; i++) {
 			case "effect": // Sets text effect
 				effect = global.mapeffect[? values[1]];
 				if (is_undefined(effect)) effect = 0;
-				
 				command_valid = true;
 			break;
 			
 			case "goto": // Opens specified dialogue from the beginning
 				var gotoref_dialogue = asset_get_index(values[1]);
 				if (gotoref_dialogue != -1) {
-					// Prevent infinite recursion
-					if !(msg_current == 0 && gotoref_dialogue == dialogue_index) {
-						dialogue_open(gotoref_dialogue, []);
-						exit;
-					}
+					dialogue_open(gotoref_dialogue, []);
+					exit;
 				}
+				command_valid = true;
 			break;
 			
 			case "gotoref": // Goes to the specified line in the dialogue
@@ -104,23 +119,27 @@ for (var i = 1; i <= msg_length; i++) {
 							);
 							
 							if (ref_number == gotoref_number) {
-								// Prevent infinite recursion
-								if !(msg_current == k && gotoref_dialogue == dialogue_index) {
-									dialogue_open_at(gotoref_dialogue, [], k);
-									exit;
-								}
+								dialogue_open_at(gotoref_dialogue, [], k);
+								exit;
 							}
 						}
 					}
-					
-					instance_destroy(); // If reference isn't found, dialogue ends
+						
+					// If reference isn't found, dialogue ends
+					instance_destroy();
 				}
+			break;
+			
+			case "l":
+			case "layout": // Sets layout
+				var layout = global.maplayout[? values[1]];
+				if (!is_undefined(layout)) dialogue_set_layout(layout);
+				command_valid = true;
 			break;
 			
 			case "ts": // Sets text speed
 				tspeed = global.mapspeed[? values[1]];
 				if (is_undefined(tspeed)) tspeed = 1;
-				
 				command_valid = true;
 			break;
 			
@@ -157,22 +176,23 @@ for (var i = 1; i <= msg_length; i++) {
 	}
 	
 	if (char != "#") {
-		array_push(colours, colour);
-		array_push(effects, effect);
-		array_push(textspeed, tspeed);
+		colours[i - breaks - 1] = colour;
+		effects[i - breaks - 1] = effect;
+		textspeed[i - breaks - 1] = tspeed;
+	} else {
+		breaks++;
 	}
 }
 
-msg_current++;
-
 // Word wrapping algorithm
 var line_width = 0;
-var line_maxwidth = dialogue_gui_width - (dialogue_textbox_offset + dialogue_textbox_hpadding) * 2;
+var line_maxwidth = textbox_width - textbox_hpadding * 2;
 
 if (question_asked) {
-	line_maxwidth -= dialogue_options_width + dialogue_textbox_hpadding / 2;	
+	line_maxwidth -= textbox_options_width + textbox_hpadding / 2;	
 }
 
+draw_set_font(dialogue_font);
 for (var i = 1; i <= msg_length; i++) {
 	var char = string_char_at(msg, i);
 	
@@ -203,3 +223,8 @@ for (var i = 1; i <= msg_length; i++) {
 	
 	i = word_wrap;
 }
+
+msg_current++;
+
+// Set first character's speed
+event_user(1);

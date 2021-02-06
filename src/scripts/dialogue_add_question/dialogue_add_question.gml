@@ -1,7 +1,7 @@
 /// @function dialogue_add_question(index, option, answer)
-/// @argument index
-/// @argument option
-/// @argument answer
+/// @argument {real} index
+/// @argument {string} option
+/// @argument {array} answer
 // Should only be called inside dialogue script
 function dialogue_add_question(index, option, answer) {
 	if (index >= 0) {

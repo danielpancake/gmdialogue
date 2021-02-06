@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Scripts",
-    "path": "folders/Scripts.yy",
+    "name": "DialogueSystem",
+    "path": "folders/Scripts/DialogueSystem.yy",
   },
   "resourceVersion": "1.0",
-  "name": "test_dialogue",
+  "name": "string_pos_any",
   "tags": [],
   "resourceType": "GMScript",
 }
