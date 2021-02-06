@@ -1,7 +1,5 @@
 /// @description Variables
-dialogue_index = 0;
-dialogue_arguments = [];
-questions = [];
+dialogue_stack = ds_stack_create();
 
 dialogue_gui_width = 480;
 dialogue_gui_height = 320;

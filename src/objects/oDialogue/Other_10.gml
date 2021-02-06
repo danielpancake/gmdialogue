@@ -1,6 +1,26 @@
 /// @description Parsing message
-msg = messages[msg_current];
-msg_end = array_length(messages);
+msg_end = array_length(dialogue);
+
+// Check for the last message
+if (msg_current >= msg_end) {
+	if (ds_stack_size(dialogue_stack) > 0) {
+		var pop = ds_stack_pop(dialogue_stack);
+		if (pop[0] == -1) {
+			dialogue = messages;
+		} else {
+			dialogue = questions[pop[0]][1][pop[2]];
+		}
+		msg_current = pop[1];
+			
+		event_user(0);
+		exit;
+	}
+	
+	instance_destroy();
+	exit;
+}
+
+msg = dialogue[msg_current];
 msg_length = string_length(msg);
 
 // Skip all empty messages
@@ -31,8 +51,6 @@ var tspeed = 1;
 colours = array_create(msg_length, colour);
 effects	= array_create(msg_length, effect);
 textspeed = array_create(msg_length, tspeed);
-
-char_count = 1;
 
 // Parse dialogue commands
 for (var i = 1; i <= msg_length; i++) {
@@ -75,7 +93,7 @@ for (var i = 1; i <= msg_length; i++) {
 			case "col":
 			case "color":
 			case "colour": // Sets text colour
-				if (values_count == 4) { // Parging rgb/hsv colour
+				if (values_count == 4) { // Parging rgb / hsv colour
 					colour = make_colour_unsafe_strings(values[1], values[2], values[3], values[4]);
 					command_valid = true;
 				} else { // Picking predefined colour
@@ -93,16 +111,8 @@ for (var i = 1; i <= msg_length; i++) {
 				command_valid = true;
 			break;
 			
-			case "goto": // Opens specified dialogue from the beginning
-				var gotoref_dialogue = asset_get_index(values[1]);
-				if (gotoref_dialogue != -1) {
-					dialogue_open(gotoref_dialogue, []);
-					exit;
-				}
-				command_valid = true;
-			break;
-			
 			case "gotoref": // Goes to the specified line in the dialogue
+							// Notice, that this command will clear dialogue stack!
 				var gotoref_dialogue = asset_get_index(values[1]);
 				var gotoref_number = values[2];
 				
@@ -119,6 +129,7 @@ for (var i = 1; i <= msg_length; i++) {
 							);
 							
 							if (ref_number == gotoref_number) {
+								ds_stack_clear(dialogue_stack);
 								dialogue_open_at(gotoref_dialogue, [], k);
 								exit;
 							}
@@ -137,6 +148,18 @@ for (var i = 1; i <= msg_length; i++) {
 				command_valid = true;
 			break;
 			
+			case "o":
+			case "open": // Opens specified dialogue
+						 // Notice, that this command will clear dialogue stack!
+				var open_dialogue = asset_get_index(values[1]);
+				if (open_dialogue != -1) {
+					ds_stack_clear(dialogue_stack);
+					dialogue_open(open_dialogue, []);
+					exit;
+				}
+				command_valid = true;
+			break;
+			
 			case "ts": // Sets text speed
 				tspeed = global.mapspeed[? values[1]];
 				if (is_undefined(tspeed)) tspeed = 1;
@@ -151,9 +174,9 @@ for (var i = 1; i <= msg_length; i++) {
 					question_options = question[0];
 					question_answers = question[1];
 					options_count = array_length(question_options)
-					if (array_length(question_answers) > 0 &&
-						options_count > 0) {
+					if (array_length(question_answers) > 0 && options_count > 0) {
 						question_asked = true;
+						stack_index[1] = index;
 						command_valid = true;
 					}
 				}
@@ -213,8 +236,6 @@ for (var i = 1; i <= msg_length; i++) {
 		} else {
 			msg = string_delete(msg, i - 1, 1);
 			msg = string_insert("#", msg, i - 1);
-			msg_length++;
-			
 			line_width = word_width;
 		}
 	} else {
@@ -224,7 +245,12 @@ for (var i = 1; i <= msg_length; i++) {
 	i = word_wrap;
 }
 
-msg_current++;
-
 // Set first character's speed
-event_user(1);
+var ts = textspeed[0];
+if (ts <= 0) {
+	char_count = msg_length;
+} else {
+	char_count = ts;
+}
+
+msg_current++;

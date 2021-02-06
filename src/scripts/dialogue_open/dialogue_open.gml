@@ -8,11 +8,14 @@ function dialogue_open_at(index, arguments, position){
 	}
 	
 	with (oDialogue) {
-		dialogue_index = index;
-		dialogue_arguments = arguments;
+		questions = [];
+		script_execute_ext(index, arguments);
+		
+		dialogue = messages;
+		stack_index = [-1, -1];
+		stack_option = 0;
 		
 		msg_current = position;
-		script_execute_ext(index, arguments);
 		event_user(0);
 	}
 }

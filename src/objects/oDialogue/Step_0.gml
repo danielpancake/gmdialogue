@@ -8,14 +8,14 @@ if (char_count == msg_length) {
 	// Go to next message
 	if (autoprocess || keyboard_check_pressed(vk_enter)) {
 		if (question_asked) {
-			messages = question_answers[options_cursor];
-			msg_current = 0;
-			event_user(0);
-		} else if (msg_current < msg_end) {
-			event_user(0);
-		} else {
-			instance_destroy();	
+			dialogue = question_answers[options_cursor];
+			ds_stack_push(dialogue_stack, [stack_index[0], msg_current, stack_option]);
+			stack_index[0] = stack_index[1];
+			stack_option = options_cursor;
+			msg_current = 0;	
 		}
+		
+		event_user(0);
 	}
 	
 	// Option selection

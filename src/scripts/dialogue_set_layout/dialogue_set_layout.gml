@@ -1,5 +1,5 @@
 /// @function dialogue_set_layout(layout)
-/// @argumemt {string} layout
+/// @argument {string} layout
 function dialogue_set_layout(layout) {
 	switch (layout) {
 		default:

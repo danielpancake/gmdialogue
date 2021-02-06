@@ -5,7 +5,7 @@
 // Should only be called inside dialogue script
 function dialogue_add_question(index, option, answer) {
 	if (index >= 0) {
-		if !(index < array_length(questions)) {
+		if (index >= array_length(questions)) {
 			array_insert(questions, index, [[], []]);
 		}
 		

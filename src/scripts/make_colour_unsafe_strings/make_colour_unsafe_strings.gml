@@ -1,4 +1,4 @@
-/// @funciton make_colour_unsafe_strings(colour space, channel a, b, c)
+/// @function make_colour_unsafe_strings(colour space, channel a, b, c)
 /// @argument {string} colour_space Colour space name: "rgb" or "hsv"
 /// @argument {string} ch_a Channel №1
 /// @argument {string} ch_b Channel №2
