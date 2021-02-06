@@ -26,6 +26,10 @@ function dialogue_setup() {
 	global.mapeffect = ds_map_create();
 	global.mapeffect[? "normal"] = 0;
 	global.mapeffect[? "shaking"] = 1;
+	global.mapeffect[? "quivering"] = 2;
+	global.mapeffect[? "floating"] = 3;
+	global.mapeffect[? "bouncing"] = 4;
+	global.mapeffect[? "waving"] = 5;
 	#endregion
 	#region Dialogue layout map
 	global.maplayout = ds_map_create();

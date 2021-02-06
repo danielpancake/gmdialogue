@@ -1,4 +1,7 @@
 /// @description Variables
+default_colour = c_white;
+default_effect = 0;
+
 dialogue_stack = ds_stack_create();
 
 dialogue_gui_width = 480;

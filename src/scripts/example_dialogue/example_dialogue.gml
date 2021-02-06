@@ -1,7 +1,7 @@
 /// @function example_dialogue()
 function example_dialogue() {
 	messages = [
-		"Welcome, [c:yellow]" + environment_get_variable("USERNAME"),
+		"Welcome, [c:yellow][e:waving]" + environment_get_variable("USERNAME"),
 		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.[q:0]",
 		
 		"When the text of the question ends, the main dialogue continues.",

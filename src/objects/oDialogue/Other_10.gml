@@ -44,13 +44,13 @@ options_count = 0;
 options_cursor = 0;
 
 var breaks = 0;
-var colour = c_white;
-var effect = 0;
 var tspeed = 1;
 
-colours = array_create(msg_length, colour);
-effects	= array_create(msg_length, effect);
-textspeed = array_create(msg_length, tspeed);
+colours = [];
+colours_max = 0;
+effects = [];
+effects_max = 0;
+textspeed = [];
 
 // Parse dialogue commands
 for (var i = 1; i <= msg_length; i++) {
@@ -93,6 +93,8 @@ for (var i = 1; i <= msg_length; i++) {
 			case "col":
 			case "color":
 			case "colour": // Sets text colour
+				var colour;
+				
 				if (values_count == 4) { // Parging rgb / hsv colour
 					colour = make_colour_unsafe_strings(values[1], values[2], values[3], values[4]);
 					command_valid = true;
@@ -101,13 +103,20 @@ for (var i = 1; i <= msg_length; i++) {
 					if (is_undefined(colour)) colour = c_white;
 					command_valid = true;
 				}
+				
+				if (command_valid) {
+					array_push(colours, colour << 32 | (i - breaks));	
+					colours_max++;
+				}
 			break;
 			
 			case "e":
 			case "eff":
 			case "effect": // Sets text effect
-				effect = global.mapeffect[? values[1]];
+				var effect = global.mapeffect[? values[1]];
 				if (is_undefined(effect)) effect = 0;
+				array_push(effects, effect << 32 | (i - breaks));
+				effects_max++;
 				command_valid = true;
 			break;
 			
@@ -199,12 +208,22 @@ for (var i = 1; i <= msg_length; i++) {
 	}
 	
 	if (char != "#") {
-		colours[i - breaks - 1] = colour;
-		effects[i - breaks - 1] = effect;
 		textspeed[i - breaks - 1] = tspeed;
 	} else {
 		breaks++;
 	}
+}
+
+// Add default colour
+if (colours_max == 0) {
+	colours = [default_colour << 32];
+	colours_max = 1;
+}
+
+// Add default effect
+if (effects_max == 0) {
+	effects = [0];
+	effects_max = 1;
 }
 
 // Word wrapping algorithm
