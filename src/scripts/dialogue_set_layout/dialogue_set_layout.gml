@@ -1,7 +1,7 @@
-/// @function dialogue_set_layout(layout)
-/// @argument {string} layout
-function dialogue_set_layout(layout) {
-	switch (layout) {
+/// @function dialogue_set_layout(index)
+/// @argument {number} index Real value representing layout index
+function dialogue_set_layout(index) {
+	switch (index) {
 		default:
 		case -1: // Default
 			dialogue_font = DefaultArial;
@@ -18,6 +18,25 @@ function dialogue_set_layout(layout) {
 			textbox_show = true;
 			
 			line_spacing = 16;
+		break;
+		
+		case 1: // TV box 32x24
+			dialogue_font = DefaultArial;
+			line_spacing = 10;
+			
+			// Or use monospaced font
+			draw_set_font(dialogue_font);
+			textbox_width = string_width("0") * 32 + 1;
+			textbox_left = (dialogue_gui_width - textbox_width) / 2;
+			
+			textbox_height = line_spacing * 24;
+			textbox_top = 32;
+			
+			textbox_hpadding = 0;
+			textbox_vpadding = 0;
+			
+			textbox_options_width = 0;
+			textbox_show = true;
 		break;
 	}
 }

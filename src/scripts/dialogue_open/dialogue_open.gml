@@ -1,7 +1,7 @@
 /// @function dialogue_open_at(index, [arg1,arg2,...], position)
-/// @argument {real} index
-/// @argument {array} arguments
-/// @argument {real} position
+/// @argument {number} index Asset index of the script containing the dialogue
+/// @argument {array} arguments Arguments to execute dialogue script with
+/// @argument {number} position The index of the first message in the dialogue
 function dialogue_open_at(index, arguments, position){
 	if (!global.dialogue_is_open) {
 		instance_create_depth(0, 0, 0, oDialogue);
@@ -21,8 +21,8 @@ function dialogue_open_at(index, arguments, position){
 }
 
 /// @function dialogue_open(index, [arg1,arg2,...])
-/// @argument {real} index
-/// @argument {array} arguments
+/// @argument {number} index Asset index of the script containing the dialogue
+/// @argument {array} arguments Arguments to execute dialogue script with
 function dialogue_open(index, arguments){
 	dialogue_open_at(index, arguments, 0);
 }

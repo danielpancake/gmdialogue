@@ -30,8 +30,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "DialogueSystem",
-    "path": "folders/Objects/DialogueSystem.yy",
+    "name": "Dialogue System",
+    "path": "folders/Dialogue System.yy",
   },
   "resourceVersion": "1.0",
   "name": "oDialogue",

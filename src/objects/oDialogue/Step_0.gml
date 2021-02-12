@@ -1,24 +1,24 @@
-/// @description Input handler and processing
+/// @description Input handling and processing
 if (char_count == msg_length) {
+	
 	// Autoprocessing
 	if (autoprocess_enabled && !autoprocess && alarm[1] == -1) {
 		alarm[1] = autoprocess_delay;
 	}
 	
-	// Go to next message
 	if (autoprocess || keyboard_check_pressed(vk_enter)) {
-		if (question_asked) {
+		if (question_asked) { // Dialogue stack pushing
 			dialogue = question_answers[options_cursor];
 			ds_stack_push(dialogue_stack, [stack_index[0], msg_current, stack_option]);
 			stack_index[0] = stack_index[1];
 			stack_option = options_cursor;
-			msg_current = 0;	
+			msg_current = 0;
 		}
 		
-		event_user(0);
+		event_user(0); // Parsing next message
 	}
 	
-	// Option selection
+	// Options selection
 	if (keyboard_check_pressed(vk_up)) {
 		if (options_cursor > 0) {
 			options_cursor--;
@@ -36,16 +36,14 @@ if (char_count == msg_length) {
 	}
 }
 
-// Skip message
+// Completion output of the current message
 if (keyboard_check_pressed(vk_shift)) {
 	char_count = msg_length;
 }
 
-// Next character
+// Textspeed controller
 if (!dialogue_is_paused) {
-	if (char_count < msg_length) {
-		event_user(1);
-	}
+	if (char_count < msg_length) { event_user(1); }
 }
 
 // Sin cycle

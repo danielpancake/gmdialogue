@@ -1,4 +1,4 @@
-// This script creates the data structures required for the dialog parsing process
+// This script creates data structures required for the dialog parsing process
 // Feel free to change these values or add new ones
 function dialogue_setup() {
 	#region Dialogue colours map
@@ -43,6 +43,6 @@ function dialogue_setup() {
 	global.mapspeed[? "fast"] = 2;
 	#endregion
 	
-	// Use this value to determine if dialogue is open
+	// Use this value to check if dialogue is open
 	global.dialogue_is_open = false;
 }

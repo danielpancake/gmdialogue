@@ -3,21 +3,35 @@ display_set_gui_size(dialogue_gui_width, dialogue_gui_height);
 
 if (textbox_show) {
 	draw_set_alpha(1);
-	draw_set_colour(c_black);
+	draw_set_colour(dialogue_background_colour);
 	draw_rectangle(textbox_left, textbox_top,
 		textbox_left + textbox_width, textbox_top + textbox_height, false);
 }
 
 var breaks = 0;
-var cc = 1;
+var cc = 0;
 
 var colour = default_colour;
+var colour_pos;
+
+if (colours_max > 0) {
+	colour_pos = colours[0] & 0xffffffff;
+} else {
+	colour_pos = -1;
+}
+
 var colour_count = 0;
-var colour_pos = colours[colour_count] & 0xffffffff;
 
 var effect = default_effect;
+var effect_pos;
+
+if (effects_max > 0) {
+	effect_pos = effects[0] & 0xffffffff;
+} else {
+	effect_pos = -1;
+}
+
 var effect_count = 0;
-var effect_pos = effects[effect_count] & 0xffffffff;
 
 var line_current = 0;
 var line_width = 0;
@@ -26,27 +40,32 @@ draw_set_font(dialogue_font);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 
-// Draw dialogue text
-while (cc <= char_count) {
-	var char = string_char_at(msg, cc);
+// Drawing dialogue text
+while (cc < char_count) {
+	var char = msg_chars[cc];
+	
 	if (char == "#") {
 		line_current++;
 		line_width = 0;
-		
 		breaks++;
 		cc++;
-		
 		continue;
 	}
 	
 	var xx = textbox_left + textbox_hpadding + line_width;
 	var yy = textbox_top + textbox_vpadding + line_current * line_spacing;
 	
-	// Change text effect
-	if (cc - breaks >= effect_pos) {
-		effect = (effects[effect_count] >> 32) & 0xffffffff;
-		if (effect_count < effects_max - 1) effect_count++;
-		effect_pos = effects[effect_count] & 0xffffffff;
+	// Changing text effect
+	if (effect_pos != -1) {
+		if (cc - breaks >= colour_pos) {
+			effect = (effects[effect_count] >> 32) & 0xffffffff;
+			
+			if (effect_count < effects_max - 1) {
+				effect_pos = effects[++colour_count] & 0xffffffff;
+			} else {
+				effect_pos = -1;	
+			}
+		}
 	}
 	
 	switch (effect) {
@@ -75,27 +94,36 @@ while (cc <= char_count) {
 		break;
 	}
 	
-	// Change draw colour
-	if (cc - breaks >= colour_pos) {
-		colour = (colours[colour_count] >> 32) & 0xffffffff;
-		if (colour_count < colours_max - 1) colour_count++;
-		colour_pos = colours[colour_count] & 0xffffffff;
+	// Changing draw colour
+	if (colour_pos != -1) {
+		if (cc - breaks >= colour_pos) {
+			colour = (colours[colour_count] >> 32) & 0xffffffff;
+			
+			if (colour_count < colours_max - 1) {
+				colour_pos = colours[++colour_count] & 0xffffffff;
+			} else {
+				colour_pos = -1;	
+			}
+		}
 	}
 	
-	draw_text_colour(xx, yy, char, colour, colour, colour, colour, 1);
+	draw_set_color(colour);
+	draw_text(xx, yy, char);
 	
 	line_width += string_width(char);
 	cc++;
 }
 
-// Show questions and options
+// Showing question and its options
 if (question_asked && char_count == msg_length) {
 	for (var i = 0; i < options_count; i++) {
 		var option = question_options[i];
-		draw_set_colour(c_white);
+		
 		if (i == options_cursor) {
 			draw_set_colour(c_yellow);
 			option = "> " + option;
+		} else {
+			draw_set_colour(c_white);
 		}
 		
 		draw_text(textbox_left + textbox_width - textbox_hpadding - textbox_options_width,

@@ -1,0 +1,3 @@
+[submodule "src/scripts/string_to_array"]
+	path = src/scripts/string_to_array
+	url = https://github.com/danielpancake/string_to_array

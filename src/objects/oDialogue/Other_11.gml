@@ -1,32 +1,43 @@
-/// @description Next character and delays
-var breaks = string_count("#", string_copy(msg, 1, char_count - 1));
-var ts = textspeed[char_count - breaks - 1];
-if (ts <= 0) {
-	char_count = msg_length;
-} else {
-	var lookahead = string_copy(msg, char_count + 1, ceil(ts));
-	var char = string_pos_any(["!", "?", ".", ";", ":", ","], lookahead);
-	var val = char[0];
+/// @description Text speed controller
+var limit = msg_length;
+if (textspeed_pos != -1) {
+	limit = textspeed_pos;
 	
-	if (char[0] != 0) {
-		switch (char[1]) {
-			case "!":
-			case "?":
-			case ".":
-				alarm[0] = 50 / ts;
-			break;
-			
-			case ";":
-			case ":":
-			case ",":
-				alarm[0] = 20 / ts;
-			break;
+	if (char_count >= textspeed_pos) {
+		var ts = textspeed[textspeed_cursor][0];
+		if (ts < 0) {
+			tspeed = msg_length;
+		} else {
+			tspeed = ts;
 		}
 		
-		dialogue_is_paused = true;
-	} else {
-		val = ts;
+		if (textspeed_cursor < textspeed_max - 1) {
+			textspeed_pos = textspeed[++textspeed_cursor][1];
+		} else {
+			textspeed_pos = -1;
+		}
+	}
+}
+
+// Punctuation delays
+var lookahead = char_array_pos_any(msg_chars, floor(char_count), tspeed, break_characters, true);
+if (lookahead != -1) {
+	switch (lookahead[1]) {
+		case "!":
+		case "?":
+		case ".":
+			alarm[0] = max(50 / tspeed, 15);
+		break;
+		
+		case ";":
+		case ":":
+		case ",":
+			alarm[0] = max(20 / tspeed, 15);
+		break;
 	}
 	
-	char_count = min(msg_length, char_count + val);
+	limit = lookahead[0] + 1;
+	dialogue_is_paused = true;
 }
+
+char_count = clamp(char_count + tspeed, 0, limit);
