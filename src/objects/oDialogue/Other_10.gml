@@ -122,31 +122,31 @@ for (var i = 0; i < msg_length; i++) {
 			
 			// Open dialogue from referenced line
 			case "gotoref": // Note that this command will clear dialogue stack!
-				if (values_count == 3) {
-					var gotoref_dialogue = asset_get_index(values[1]);
-					if (gotoref_dialogue != -1) {
-						script_execute(gotoref_dialogue);
-						
-						for (var k = 0; k < array_length(messages); k++) {
-							var _msg = messages[k];
-							var ref_pos = string_pos("[#", _msg);
-							if (ref_pos != 0) {
-								var ref_number = real(
-									string_copy(_msg, ref_pos + 3,
-										string_pos("]", string_copy(_msg, ref_pos, string_length(_msg) - ref_pos + 1)) - 4
-									)
-								);
-								
-								if (ref_number == values[2]) {
-									ds_stack_clear(dialogue_stack);
-									dialogue_open_at(gotoref_dialogue, [], k);
-									exit;
-								}
+				if (values_count != 3) continue; // Argument count checker
+				
+				var gotoref_dialogue = asset_get_index(values[1]);
+				if (gotoref_dialogue != -1) {
+					script_execute(gotoref_dialogue);
+					
+					for (var k = 0; k < array_length(messages); k++) {
+						var _msg = messages[k];
+						var ref_pos = string_pos("[#", _msg);
+						if (ref_pos != 0) {
+							var ref_number = real(
+								string_copy(_msg, ref_pos + 3,
+									string_pos("]", string_copy(_msg, ref_pos, string_length(_msg) - ref_pos + 1)) - 4
+								)
+							);
+							
+							if (ref_number == values[2]) {
+								ds_stack_clear(dialogue_stack);
+								dialogue_open_at(gotoref_dialogue, [], k);
+								exit;
 							}
 						}
-						
-						instance_destroy(); // If the reference is absent, the dialogue ends
 					}
+					
+					instance_destroy(); // If the reference is absent, the dialogue ends
 				}
 			break;
 			
@@ -161,8 +161,14 @@ for (var i = 0; i < msg_length; i++) {
 			case "open": // Note that this command will clear dialogue stack!
 				var open_dialogue = asset_get_index(values[1]);
 				if (open_dialogue != -1) {
+					var args = array_create(values_count - 2, "");
+					if (values_count - 2 > 0) {
+						for (var i = 0; i < values_count - 2; i++;) {
+							args[i] = values[i + 2];
+						}
+					}
 					ds_stack_clear(dialogue_stack);
-					dialogue_open(open_dialogue, []);
+					dialogue_open(open_dialogue, args);
 					exit;
 				}
 				command_valid = true;
@@ -255,4 +261,5 @@ if (textspeed_max == 0) {
 }
 
 tspeed = default_tspeed;
+limit = msg_length;
 char_count = 0;

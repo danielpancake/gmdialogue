@@ -34,6 +34,7 @@ function dialogue_setup() {
 	#region Dialogue layout map
 	global.maplayout = ds_map_create();
 	global.maplayout[? "default"] = -1;
+	global.maplayout[? "tv"] = 1;
 	#endregion
 	#region Dialogue text speed map
 	global.mapspeed = ds_map_create();

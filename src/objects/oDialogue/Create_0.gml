@@ -1,5 +1,4 @@
 /// @description Variables
-show_debug_overlay(1);
 dialogue_stack = ds_stack_create();
 
 default_colour = c_white;
