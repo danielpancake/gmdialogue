@@ -11,30 +11,16 @@ if (textbox_show) {
 var breaks = 0;
 var cc = 0;
 
-var colour = default_colour;
-var colour_pos;
-
-if (colours_max > 0) {
-	colour_pos = colours[0] & 0xffffffff;
-} else {
-	colour_pos = -1;
-}
-
-var colour_count = 0;
-
-var effect = default_effect;
-var effect_pos;
-
-if (effects_max > 0) {
-	effect_pos = effects[0] & 0xffffffff;
-} else {
-	effect_pos = -1;
-}
-
-var effect_count = 0;
-
 var line_current = 0;
 var line_width = 0;
+
+colour_options[0] = default_colour;
+colour_options[1] = 0;
+colour_options[2] = (colours_max > 0) ? colours[0] & 0xffffffff : -1;
+
+effect_options[0] = default_effect;
+effect_options[1] = 0;
+effect_options[2] = (effects_max > 0) ? effects[0] & 0xffffffff : -1;
 
 draw_set_font(dialogue_font);
 draw_set_halign(fa_left);
@@ -56,38 +42,28 @@ while (cc < char_count) {
 	var yy = textbox_top + textbox_vpadding + line_current * line_spacing;
 	
 	// Changing text effect
-	if (effect_pos != -1) {
-		if (cc - breaks >= colour_pos) {
-			effect = (effects[effect_count] >> 32) & 0xffffffff;
-			
-			if (effect_count < effects_max - 1) {
-				effect_pos = effects[++colour_count] & 0xffffffff;
-			} else {
-				effect_pos = -1;	
-			}
-		}
-	}
+	dialogue_values_changer(effects, effect_options, cc - breaks, effects_max);
 	
-	switch (effect) {
-		case 1:	// Shaking
+	switch (effect_options[0]) {
+		case ds_effects.SHAKING:
 			xx += random_range(-0.5, 0.5);
 			yy += random_range(-0.5, 0.5);
 		break;
 		
-		case 2: // Quivering
+		case ds_effects.QUIVERING:
 			xx += irandom_range(-1, 1);
 			yy += irandom_range(-1, 1);
 		break;
 		
-		case 3: // Floating
+		case ds_effects.FLOATING:
 			yy -= sin(degtorad(_sin - xx));
 		break;
 		
-		case 4: // Bouncing
+		case ds_effects.BOUNCING:
 			yy -= abs(sin(degtorad(_sin - xx))) * 2;
 		break;
 		
-		case 5: // Waving
+		case ds_effects.WAVING:
 			var offset = sin(degtorad(textbox_left + textbox_hpadding + line_width + _sin));
 			xx += offset;
 			yy += offset * 2;
@@ -95,19 +71,8 @@ while (cc < char_count) {
 	}
 	
 	// Changing draw colour
-	if (colour_pos != -1) {
-		if (cc - breaks >= colour_pos) {
-			colour = (colours[colour_count] >> 32) & 0xffffffff;
-			
-			if (colour_count < colours_max - 1) {
-				colour_pos = colours[++colour_count] & 0xffffffff;
-			} else {
-				colour_pos = -1;	
-			}
-		}
-	}
-	
-	draw_set_color(colour);
+	dialogue_values_changer(colours, colour_options, cc - breaks, colours_max);
+	draw_set_color(colour_options[0]);
 	draw_text(xx, yy, char);
 	
 	line_width += string_width(char);

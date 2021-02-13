@@ -48,9 +48,8 @@ colours_max = 0;
 effects = [];
 effects_max = 0;
 
-textspeed = [];
-textspeed_max = 0;
-textspeed_cursor = 0;
+textspeeds = [];
+textspeeds_max = 0;
 
 char_count = 0;
 
@@ -177,8 +176,8 @@ for (var i = 0; i < msg_length; i++) {
 			case "ts": // Text speed
 				var ts = global.mapspeed[? values[1]];
 				if (is_undefined(ts)) ts = 0;
-				array_push(textspeed, [ts, i - breaks - omitted]);
-				textspeed_max++;
+				array_push(textspeeds, [ts, i - breaks - omitted]);
+				textspeeds_max++;
 				command_valid = true;
 			break;
 			
@@ -202,6 +201,11 @@ for (var i = 0; i < msg_length; i++) {
 		if (command_valid) {
 			msg_chars = char_array_replace(msg_chars, i, command_length + 2, "", false);
 			omitted += command_length + 2;
+			
+			if (msg_length - omitted - breaks <= 0) {
+				event_user(0); exit;
+			}
+			
 			i += command_length + 1;
 		}
 	} else if (char == "#") {
@@ -254,12 +258,15 @@ for (var i = 0; i < msg_length; i++) {
 }
 
 // Setting initial textspeed
-if (textspeed_max == 0) {
+char_count = 0;
+char_limit = msg_length;
+
+if (textspeeds_max == 0) {
 	textspeed_pos = -1;
 } else {
-	textspeed_pos = textspeed[0][1];
+	textspeed_pos = textspeeds[0][1];
 }
 
-tspeed = default_tspeed;
-limit = msg_length;
-char_count = 0;
+textspeed = default_textspeed;
+textspeed_cursor = 0;
+event_user(1);

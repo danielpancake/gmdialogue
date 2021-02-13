@@ -23,13 +23,23 @@ function dialogue_setup() {
 	global.mapcolour[? "yellow"] = c_yellow;
 	#endregion
 	#region Dialogue effects map
+	// Effects MUST be expressed by whole positive numbers as
+	// they will be stored with bit-shifting algorithm
+	enum ds_effects {
+		NORMAL,
+		SHAKING,
+		QUIVERING,
+		FLOATING,
+		BOUNCING,
+		WAVING
+	}
 	global.mapeffect = ds_map_create();
-	global.mapeffect[? "normal"] = 0;
-	global.mapeffect[? "shaking"] = 1;
-	global.mapeffect[? "quivering"] = 2;
-	global.mapeffect[? "floating"] = 3;
-	global.mapeffect[? "bouncing"] = 4;
-	global.mapeffect[? "waving"] = 5;
+	global.mapeffect[? "normal"] = ds_effects.NORMAL;
+	global.mapeffect[? "shaking"] = ds_effects.SHAKING;
+	global.mapeffect[? "quivering"] = ds_effects.QUIVERING;
+	global.mapeffect[? "floating"] = ds_effects.FLOATING;
+	global.mapeffect[? "bouncing"] = ds_effects.BOUNCING;
+	global.mapeffect[? "waving"] = ds_effects.WAVING;
 	#endregion
 	#region Dialogue layout map
 	global.maplayout = ds_map_create();
@@ -37,6 +47,8 @@ function dialogue_setup() {
 	global.maplayout[? "tv"] = 1;
 	#endregion
 	#region Dialogue text speed map
+	// Speed can be expressed by any real number
+	// Note that all negative numbers will set the maximum text speed
 	global.mapspeed = ds_map_create();
 	global.mapspeed[? "max"] = -1;
 	global.mapspeed[? "slow"] = 0.5;
@@ -44,6 +56,6 @@ function dialogue_setup() {
 	global.mapspeed[? "fast"] = 2;
 	#endregion
 	
-	// Use this value to check if dialogue is open
+	// Use this value to check if dialogue is opened
 	global.dialogue_is_open = false;
 }

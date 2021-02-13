@@ -9,6 +9,7 @@
     {"id":{"name":"dialogue_setup","path":"scripts/dialogue_setup/dialogue_setup.yy",},"order":2,},
     {"id":{"name":"DefaultArial","path":"fonts/DefaultArial/DefaultArial.yy",},"order":5,},
     {"id":{"name":"dialogue_open","path":"scripts/dialogue_open/dialogue_open.yy",},"order":1,},
+    {"id":{"name":"dialogue_values_changer","path":"scripts/dialogue_values_changer/dialogue_values_changer.yy",},"order":5,},
     {"id":{"name":"oDialogue","path":"objects/oDialogue/oDialogue.yy",},"order":0,},
   ],
   "Options": [

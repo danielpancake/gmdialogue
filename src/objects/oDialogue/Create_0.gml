@@ -2,8 +2,11 @@
 dialogue_stack = ds_stack_create();
 
 default_colour = c_white;
+colour_options = [default_colour, -1, 0]; // Colour / position / count 
 default_effect = 0;
-default_tspeed = 1;
+effect_options = [default_effect, -1, 0]; // Effect / position / count
+
+default_textspeed = 1;
 
 dialogue_gui_width = 480;
 dialogue_gui_height = 320;
