@@ -4,7 +4,7 @@ function dialogue_set_layout(index) {
 	switch (index) {
 		default:
 		case -1: // Default
-			dialogue_font = DefaultArial;
+			default_font = DefaultArial;
 			
 			textbox_left = 32;
 			textbox_width = dialogue_gui_width - textbox_left * 2;
@@ -21,11 +21,11 @@ function dialogue_set_layout(index) {
 		break;
 		
 		case 1: // TV box 32x24
-			dialogue_font = DefaultArial;
+			default_font = DefaultArial;
 			line_spacing = 10;
 			
 			// Or use monospaced font
-			draw_set_font(dialogue_font);
+			draw_set_font(default_font);
 			textbox_width = string_width("0") * 32 + 1;
 			textbox_left = (dialogue_gui_width - textbox_width) / 2;
 			

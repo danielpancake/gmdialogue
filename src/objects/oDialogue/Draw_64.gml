@@ -4,8 +4,7 @@ display_set_gui_size(dialogue_gui_width, dialogue_gui_height);
 if (textbox_show) {
 	draw_set_alpha(1);
 	draw_set_colour(dialogue_background_colour);
-	draw_rectangle(textbox_left, textbox_top,
-		textbox_left + textbox_width, textbox_top + textbox_height, false);
+	draw_rectangle(textbox_left, textbox_top, textbox_left + textbox_width, textbox_top + textbox_height, false);
 }
 
 var breaks = 0;
@@ -14,26 +13,25 @@ var cc = 0;
 var line_current = 0;
 var line_width = 0;
 
-colour_options[0] = default_colour;
-colour_options[1] = 0;
-colour_options[2] = (colours_max > 0) ? colours[0] & 0xffffffff : -1;
-
-effect_options[0] = default_effect;
-effect_options[1] = 0;
-effect_options[2] = (effects_max > 0) ? effects[0] & 0xffffffff : -1;
-
-draw_set_font(dialogue_font);
+draw_set_colour(default_colour);
+draw_set_font(default_font);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
+
+dialogue_values_reset(colour_options, default_colour, 0, (colours_max > 0) ? colours[0] & 0xffffffff : -1);
+dialogue_values_reset(effect_options, default_effect, 0, (effects_max > 0) ? effects[0] & 0xffffffff : -1);
+dialogue_values_reset(font_options, default_font, 0, (fonts_max > 0) ? fonts[0] & 0xffffffff : -1);
 
 // Drawing dialogue text
 while (cc < char_count) {
 	var char = msg_chars[cc];
 	
-	if (char == "#") {
+	if (char == "#") breaks++;
+	// "" used as second newline character
+	// Since it doesn't appear normally, it is used by by parser
+	if (char == "" || char == "#") {
 		line_current++;
 		line_width = 0;
-		breaks++;
 		cc++;
 		continue;
 	}
@@ -42,7 +40,7 @@ while (cc < char_count) {
 	var yy = textbox_top + textbox_vpadding + line_current * line_spacing;
 	
 	// Changing text effect
-	dialogue_values_changer(effects, effect_options, cc - breaks, effects_max);
+	dialogue_values_changer(effects, effect_options, cc - breaks, effects_max, -1);
 	
 	switch (effect_options[0]) {
 		case ds_effects.SHAKING:
@@ -70,9 +68,9 @@ while (cc < char_count) {
 		break;
 	}
 	
-	// Changing draw colour
-	dialogue_values_changer(colours, colour_options, cc - breaks, colours_max);
-	draw_set_color(colour_options[0]);
+	// Changing text colour and font
+	dialogue_values_changer(colours, colour_options, cc - breaks, colours_max, draw_set_colour);
+	dialogue_values_changer(fonts, font_options, cc - breaks, fonts_max, draw_set_font);
 	draw_text(xx, yy, char);
 	
 	line_width += string_width(char);
