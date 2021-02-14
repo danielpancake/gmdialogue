@@ -7,8 +7,8 @@ if (textbox_show) {
 	draw_rectangle(textbox_left, textbox_top, textbox_left + textbox_width, textbox_top + textbox_height, false);
 }
 
-var breaks = 0;
-var cc = 0;
+var breaks = ffbreaks;
+var cc = ff;
 
 var line_current = 0;
 var line_width = 0;
@@ -75,6 +75,14 @@ while (cc < char_count) {
 	
 	line_width += string_width(char);
 	cc++;
+}
+
+// Text autoscrolling
+if (line_current >= line_max) {
+	var nl = char_array_pos_any_range(msg_chars, ff, msg_length, newline_characters, false);
+	if (nl != -1) { ff = nl[0] + 1; }
+	
+	ffbreaks = char_array_count_range(msg_chars, 0, ff - 1, "#", false);
 }
 
 // Showing question and its options

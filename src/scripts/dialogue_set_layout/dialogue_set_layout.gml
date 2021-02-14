@@ -18,6 +18,7 @@ function dialogue_set_layout(index) {
 			textbox_show = true;
 			
 			line_spacing = 16;
+			line_max = 6;
 		break;
 		
 		case 1: // TV box 32x24
@@ -37,6 +38,8 @@ function dialogue_set_layout(index) {
 			
 			textbox_options_width = 0;
 			textbox_show = true;
+			
+			line_max = 24;
 		break;
 	}
 }

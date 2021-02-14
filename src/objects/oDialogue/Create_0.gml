@@ -20,6 +20,7 @@ question_options = [];
 question_answers = [];
 
 break_characters = ["!", "?", ".", ";", ":", ","];
+newline_characters = ["", "#"];
 
 dialogue_set_layout(-1);
 global.dialogue_is_open = true;

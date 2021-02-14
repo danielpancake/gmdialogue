@@ -54,6 +54,9 @@ fonts_max = 0;
 textspeeds = [];
 textspeeds_max = 0;
 
+ffbreaks = 0;
+ff = 0;
+
 // Parsing dialogue message
 for (var i = 0; i < msg_length; i++) {
 	var char = msg_chars[i];
