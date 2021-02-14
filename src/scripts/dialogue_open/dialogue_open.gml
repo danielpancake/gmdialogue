@@ -28,6 +28,8 @@ function dialogue_open(index, arguments) {
 }
 
 /// @function dialogue_load_file(filename)
+/// @description This function loads dialogue messages from the file
+/// Usage (in dialogue): "... [open:dialogue_load_file:filename] ..."
 /// @argument {string} filename The name of the file to read from
 function dialogue_load_file(filename) {
 	messages = [];

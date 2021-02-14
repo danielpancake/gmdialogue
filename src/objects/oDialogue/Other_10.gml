@@ -238,44 +238,49 @@ if (question_asked) {
 	line_maxwidth -= textbox_options_width + textbox_hpadding / 2;	
 }
 
+breaks = 0;
+
 draw_set_font(default_font);
 dialogue_values_reset(font_options, default_font, 0, (fonts_max > 0) ? fonts[0] & 0xffffffff : -1);
 
-breaks = 0;
-
 for (var i = 0; i < msg_length; i++) {
-	var char = msg_chars[i];
 	var word_width = 0;
 	var word_wrap = i;
 	
-	while (word_wrap < msg_length - 1) {
+	if (msg_chars[i] == " ") {
+		word_width += string_width(char);
+		word_wrap++;
+	}
+	
+	while (word_wrap < msg_length) {
 		dialogue_values_changer(fonts, font_options, word_wrap - breaks, fonts_max, draw_set_font);
-		
+		var char = msg_chars[word_wrap];
 		if (char == "#") {
+			line_width = 0;
 			word_width = 0;
+		} else if (char == " " || word_width > line_maxwidth) {
+			break;
 		} else {
 			word_width += string_width(char);
 		}
 		
-		if (char == " " || word_width > line_maxwidth) break;
-		char = msg_chars[++word_wrap];
-	}													
+		word_wrap++;
+	}
 	
 	if (line_width + word_width > line_maxwidth) {
 		if (line_width == 0) {
-			msg_chars = char_array_insert(msg_chars, word_wrap, "#", false);
+			msg_chars = char_array_insert(msg_chars, word_wrap - 1, "#", false);
 			msg_length++;
+			breaks++;
 		} else {
-			msg_chars[i - 1] = "";
+			msg_chars[i] = "";
 			line_width = word_width;
 		}
-		
-		breaks++;
 	} else {
 		line_width += word_width;
-	}	
+	}
 	
-	i = word_wrap;
+	i = word_wrap - 1;
 }
 
 // Setting initial textspeed

@@ -28,7 +28,7 @@ while (cc < char_count) {
 	
 	if (char == "#") breaks++;
 	// "" used as second newline character
-	// Since it doesn't appear normally, it is used by by parser
+	// Since it doesn't appear normally, it is used by the parser
 	if (char == "" || char == "#") {
 		line_current++;
 		line_width = 0;
