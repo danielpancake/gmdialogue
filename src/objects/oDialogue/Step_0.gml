@@ -19,7 +19,7 @@ if (char_count == msg_length) {
 	}
 	
 	// Options selection
-	if (keyboard_check_pressed(vk_up)) {
+	if (skip_enabled && keyboard_check_pressed(vk_up)) {
 		if (options_cursor > 0) {
 			options_cursor--;
 		} else {

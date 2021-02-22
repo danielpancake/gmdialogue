@@ -37,6 +37,7 @@ options_cursor = 0;
 autoprocess = false;
 autoprocess_delay = 0;
 autoprocess_enabled = false;
+skip_enabled = true;
 dialogue_is_paused = false;
 
 var omitted = 0;
@@ -44,15 +45,17 @@ var breaks = 0;
 
 colours = [];
 colours_max = 0;
-
 effects = [];
 effects_max = 0;
-
 fonts = [];
 fonts_max = 0;
 
 textspeeds = [];
 textspeeds_max = 0;
+sprites = [];
+sprites_max = 0;
+images = [];
+images_max = 0;
 
 ffbreaks = 0;
 ff = 0;
@@ -67,7 +70,7 @@ for (var i = 0; i < msg_length; i++) {
 		if (command_length <= 0) continue;
 		
 		var values_count = char_array_count(msg_chars, i + 1, command_length, ":", false) + 1;
-		var values = array_create(values_count, -1);
+		var values = array_create(8, undefined); // Don't care about values presence anymore 
 		
 		var jj = i + 1;
 		for (var j = 0; j < values_count; j++) {
@@ -96,10 +99,9 @@ for (var i = 0; i < msg_length; i++) {
 			
 			case "c":
 			case "color":
-			case "colour": // Text colour
+			case "colour": // Sets text colour
 				var colour;
-				
-				if (values_count == 5) { // Parging rgb / hsv colour
+				if (values[1] == "rgb" || values[1] == "hsv") { // Parsing rgb / hsv colour
 					colour = make_colour_unsafe_strings(values[1], values[2], values[3], values[4]);
 					command_valid = true;
 				} else { // Picking predefined colour
@@ -109,38 +111,35 @@ for (var i = 0; i < msg_length; i++) {
 				}
 				
 				if (command_valid) {
-					array_push(colours, colour << 32 | (i - breaks - omitted));
+					array_push(colours, [colour, i - breaks - omitted]);
 					colours_max++;
 				}
 			break;
 			
 			case "e":
-			case "effect": // Text effect
+			case "effect": // Sets text effect
 				var effect = global.mapeffects[? values[1]];
 				if (is_undefined(effect)) effect = default_effect;
-				array_push(effects, effect << 32 | (i - breaks - omitted));
+				array_push(effects, [effect, i - breaks - omitted]);
 				effects_max++;
 				command_valid = true;
 			break;
 			
-			case "exit": // Immediately close dialogue
+			case "exit": // Immediately closes dialogue
 				instance_destroy(); exit;
 			break;
 
 			case "f":
-			case "font": // Text font
+			case "font": // Sets text font
 				var font = asset_get_index(values[1]);
-				if (font != -1) {
-					array_push(fonts, font << 32 | (i - breaks - omitted));
-					fonts_max++;
-					command_valid = true;
-				}
+				if (font == -1) { font = default_font; }
+				array_push(fonts, [font, i - breaks - omitted]);
+				fonts_max++;
+				command_valid = true;
 			break;
 			
-			// Open dialogue from referenced line
+			// Opens dialogue from referenced line
 			case "gotoref": // Note that this command will clear dialogue stack!
-				if (values_count != 3) continue; // Argument count checker
-				
 				var gotoref_dialogue = asset_get_index(values[1]);
 				if (gotoref_dialogue != -1) {
 					script_execute(gotoref_dialogue);
@@ -166,14 +165,41 @@ for (var i = 0; i < msg_length; i++) {
 				}
 			break;
 			
+			case "h":
+			case "character": // Sets dialogue character preset
+				var character = global.mapcharacters[? values[1]];
+				if (!is_undefined(character)) dialogue_set_character(character);
+				dialogue_gui_slider = 0;
+				event_perform(ev_alarm, 2);
+				command_valid = true;
+			break;
+			
+			case "i":
+			case "index": // Changes character image index
+				var sliding = 1;
+				var index = string_digits(values[1]);
+				if (index != "") {
+					index = real(index);
+					if (values_count >= 3) { sliding = bool(values[2]); }
+					array_push(images, [index, i - breaks - omitted, sliding]);
+					images_max++;
+					command_valid = true;
+				}
+			break;
+			
 			case "l":
-			case "layout": // Dialogue layout
+			case "layout": // Sets dialogue layout
 				var layout = global.maplayouts[? values[1]];
 				if (!is_undefined(layout)) dialogue_set_layout(layout);
 				command_valid = true;
 			break;
 			
-			case "o":	 // Open specified dialogue
+			case "noskip": // Disables skip
+				skip_enabled = false;
+				command_valid = true;
+			break;
+			
+			case "o":	 // Opens specified dialogue
 			case "open": // Note that this command will clear dialogue stack!
 				var open_dialogue = asset_get_index(values[1]);
 				if (open_dialogue != -1) {
@@ -190,7 +216,23 @@ for (var i = 0; i < msg_length; i++) {
 				command_valid = true;
 			break;
 			
-			case "ts": // Text speed
+			case "snd": // Plays a sound
+				/// TODO: make this
+			break;
+			
+			case "spr":
+			case "sprite": // Changes character sprite index
+				var sliding = 1;
+				var sprite = asset_get_index(values[1]);
+				if (sprite != -1) {
+					if (values_count >= 3) { sliding = bool(values[2]); }
+					array_push(sprites, [sprite, i - breaks - omitted, sliding]);
+					sprites_max++;
+					command_valid = true;
+				}
+			break;
+			
+			case "ts": // Sets text speed
 				var ts = global.mapspeeds[? values[1]];
 				if (is_undefined(ts)) ts = default_textspeed;
 				array_push(textspeeds, [ts, i - breaks - omitted]);
@@ -199,7 +241,7 @@ for (var i = 0; i < msg_length; i++) {
 			break;
 			
 			case "q":
-			case "question": // Show question
+			case "question": // Shows question
 			var index = real(values[1]);
 				if (index >= 0 && index < questions_count) {
 					var question = questions[index];
@@ -215,14 +257,9 @@ for (var i = 0; i < msg_length; i++) {
 			break;
 		}
 		
-		if (command_valid) { // Remove valid command from the message
+		if (command_valid) { // Removing valid command from the message
 			msg_chars = char_array_replace(msg_chars, i, command_length + 2, "", false);
 			omitted += command_length + 2;
-			
-			if (msg_length - omitted - breaks <= 0) {
-				event_user(0); exit;
-			}
-			
 			i += command_length + 1;
 		}
 	} else if (char == "#") {
@@ -234,18 +271,33 @@ for (var i = 0; i < msg_length; i++) {
 msg_chars = char_array_remove(msg_chars, "");
 msg_length -= omitted;
 
+/// Reset sprite and image options
+dialogue_values_reset(sprite_options, -1, 0, (sprites_max > 0) ? sprites[0][1] : -1); sprite_options[3] = 1;
+dialogue_values_changer(sprites, sprite_options, 0, sprites_max, dialogue_change_sprite, -1);
+
+dialogue_values_reset(image_options, 0, 0, (images_max > 0) ? images[0][1] : -1); image_options[3] = 1;
+dialogue_values_changer(images, image_options, 0, images_max, dialogue_change_image, -1);
+
+if (msg_length - breaks <= 0) {
+	event_user(0); exit;
+}
+
 // Word wrapping algorithm
-var line_width = 0;
 var line_maxwidth = textbox_width - textbox_hpadding * 2;
+var line_width = 0;
+
 if (question_asked) {
 	line_maxwidth -= textbox_options_width + textbox_hpadding / 2;	
+}
+
+if (dialogue_gui_character_sprite_index != -1) {
+	line_maxwidth -= dialogue_gui_character_image_x + dialogue_gui_character_image_width - textbox_left;
 }
 
 breaks = 0;
 
 draw_set_font(default_font);
-dialogue_values_reset(font_options, default_font, 0, (fonts_max > 0) ? fonts[0] & 0xffffffff : -1);
-
+dialogue_values_reset(font_options, default_font, 0, (fonts_max > 0) ? fonts[0][1] : -1);
 for (var i = 0; i < msg_length; i++) {
 	var word_width = 0;
 	var word_wrap = i;
@@ -256,7 +308,7 @@ for (var i = 0; i < msg_length; i++) {
 	}
 	
 	while (word_wrap < msg_length) {
-		dialogue_values_changer(fonts, font_options, word_wrap - breaks, fonts_max, draw_set_font);
+		dialogue_values_changer(fonts, font_options, word_wrap - breaks, fonts_max, draw_set_font, 0);
 		var char = msg_chars[word_wrap];
 		if (char == "#") {
 			line_width = 0;
@@ -290,12 +342,7 @@ for (var i = 0; i < msg_length; i++) {
 char_count = 0;
 char_limit = msg_length;
 
-if (textspeeds_max == 0) {
-	textspeed_pos = -1;
-} else {
-	textspeed_pos = textspeeds[0][1];
-}
-
 textspeed = default_textspeed;
 textspeed_cursor = 0;
+textspeed_pos = (textspeeds_max > 0) ? textspeeds[0][1] : -1;
 event_user(1);

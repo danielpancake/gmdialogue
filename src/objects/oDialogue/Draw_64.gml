@@ -18,9 +18,9 @@ draw_set_font(default_font);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 
-dialogue_values_reset(colour_options, default_colour, 0, (colours_max > 0) ? colours[0] & 0xffffffff : -1);
-dialogue_values_reset(effect_options, default_effect, 0, (effects_max > 0) ? effects[0] & 0xffffffff : -1);
-dialogue_values_reset(font_options, default_font, 0, (fonts_max > 0) ? fonts[0] & 0xffffffff : -1);
+dialogue_values_reset(colour_options, default_colour, 0, (colours_max > 0) ? colours[0][1] : -1);
+dialogue_values_reset(effect_options, default_effect, 0, (effects_max > 0) ? effects[0][1] : -1);
+dialogue_values_reset(font_options, default_font, 0, (fonts_max > 0) ? fonts[0][1] : -1);
 
 // Drawing dialogue text
 while (cc < char_count) {
@@ -36,12 +36,14 @@ while (cc < char_count) {
 		continue;
 	}
 	
-	var xx = textbox_left + textbox_hpadding + line_width;
+	var xx = (dialogue_gui_character_sprite_index != -1 ?
+		dialogue_gui_character_image_x + dialogue_gui_character_image_width : textbox_left) +
+		textbox_hpadding + line_width;
+		
 	var yy = textbox_top + textbox_vpadding + line_current * line_spacing;
 	
 	// Changing text effect
-	dialogue_values_changer(effects, effect_options, cc - breaks, effects_max, -1);
-	
+	dialogue_values_changer(effects, effect_options, cc - breaks, effects_max, -1, -1);
 	switch (effect_options[0]) {
 		case ds_effects.SHAKING:
 			xx += random_range(-0.5, 0.5);
@@ -69,8 +71,8 @@ while (cc < char_count) {
 	}
 	
 	// Changing text colour and font
-	dialogue_values_changer(colours, colour_options, cc - breaks, colours_max, draw_set_colour);
-	dialogue_values_changer(fonts, font_options, cc - breaks, fonts_max, draw_set_font);
+	dialogue_values_changer(colours, colour_options, cc - breaks, colours_max, draw_set_colour, 0);
+	dialogue_values_changer(fonts, font_options, cc - breaks, fonts_max, draw_set_font, 0);
 	draw_text(xx, yy, char);
 	
 	line_width += string_width(char);
@@ -100,4 +102,10 @@ if (question_asked && char_count == msg_length) {
 		draw_text(textbox_left + textbox_width - textbox_hpadding - textbox_options_width,
 			textbox_top + textbox_vpadding + i * line_spacing, option);
 	}
+}
+
+if (dialogue_gui_character_sprite_index != -1) {
+	draw_sprite(dialogue_gui_character_sprite_index, dialogue_gui_character_image_index,
+		dialogue_gui_character_image_x - dialogue_gui_character_image_width * (1 - dialogue_gui_slider),
+		dialogue_gui_character_image_y);
 }

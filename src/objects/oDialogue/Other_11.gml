@@ -37,3 +37,7 @@ if (lookahead != -1) {
 }
 
 char_count = clamp(char_count + textspeed, 0, min(char_limit, char_sublimit));
+
+// Changing sprites and images
+dialogue_values_changer(sprites, sprite_options, char_count, sprites_max, dialogue_change_sprite, -1);
+dialogue_values_changer(images, image_options, char_count, images_max, dialogue_change_image, -1);

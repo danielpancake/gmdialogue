@@ -23,8 +23,6 @@ function dialogue_setup() {
 	global.mapcolours[? "yellow"] = c_yellow;
 	#endregion
 	#region Dialogue system effects map
-	// Effects MUST be expressed by whole positive numbers as
-	// they will be stored with bit-shifting algorithm
 	enum ds_effects {
 		NORMAL,
 		SHAKING,
@@ -41,10 +39,15 @@ function dialogue_setup() {
 	global.mapeffects[? "bouncing"] = ds_effects.BOUNCING;
 	global.mapeffects[? "waving"] = ds_effects.WAVING;
 	#endregion
+	#region Dialogue system characters map
+	global.mapcharacters = ds_map_create();
+	global.mapcharacters[? "default"] = -1;
+	global.mapcharacters[? "rectangle"] = 1;
+	#endregion
 	#region Dialogue system layouts map
 	global.maplayouts = ds_map_create();
 	global.maplayouts[? "default"] = -1;
-	global.maplayouts[? "tv"] = 1;
+	global.maplayouts[? "badapple"] = 1;
 	#endregion
 	#region Dialogue system text speeds map
 	// Speed can be expressed by any real number

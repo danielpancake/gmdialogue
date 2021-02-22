@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Dialogues",
-    "path": "folders/Dialogues.yy",
+    "name": "DS Scripts",
+    "path": "folders/Dialogue System/DS Scripts.yy",
   },
   "resourceVersion": "1.0",
-  "name": "example_dialogue",
+  "name": "dialogue_set_character",
   "tags": [],
   "resourceType": "GMScript",
 }

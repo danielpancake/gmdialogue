@@ -9,6 +9,8 @@ function dialogue_open_at(index, arguments, position) {
 	
 	with (oDialogue) {
 		questions = [];
+		dialogue_set_layout(-1);
+		dialogue_set_character(-1);
 		script_execute_ext(index, arguments);
 		
 		dialogue = messages;

@@ -19,9 +19,10 @@ function dialogue_set_layout(index) {
 			
 			line_spacing = 16;
 			line_max = 6;
+			dialogue_set_character(-1);
 		break;
 		
-		case 1: // TV box 32x24
+		case 1: // Layout 32x24 for "Bad Apple" showcase
 			default_font = DefaultArial;
 			line_spacing = 10;
 			
@@ -29,17 +30,13 @@ function dialogue_set_layout(index) {
 			draw_set_font(default_font);
 			textbox_width = string_width("0") * 32 + 1;
 			textbox_left = (dialogue_gui_width - textbox_width) / 2;
-			
 			textbox_height = line_spacing * 24;
 			textbox_top = 32;
-			
 			textbox_hpadding = 0;
 			textbox_vpadding = 0;
-			
-			textbox_options_width = 0;
 			textbox_show = true;
-			
 			line_max = 24;
+			dialogue_set_character(-1);
 		break;
 	}
 }
