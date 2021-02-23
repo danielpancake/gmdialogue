@@ -18,9 +18,10 @@ draw_set_font(default_font);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 
-dialogue_values_reset(colour_options, default_colour, 0, (colours_max > 0) ? colours[0][1] : -1);
-dialogue_values_reset(effect_options, default_effect, 0, (effects_max > 0) ? effects[0][1] : -1);
-dialogue_values_reset(font_options, default_font, 0, (fonts_max > 0) ? fonts[0][1] : -1);
+colours.Reset(default_colour);
+effects.Reset(default_effect);
+fonts.Reset(default_font);
+highlights.Reset(dialogue_background_colour);
 
 // Drawing dialogue text
 while (cc < char_count) {
@@ -36,6 +37,8 @@ while (cc < char_count) {
 		continue;
 	}
 	
+	var w = string_width(char);
+	
 	var xx = (dialogue_gui_character_sprite_index != -1 ?
 		dialogue_gui_character_image_x + dialogue_gui_character_image_width : textbox_left) +
 		textbox_hpadding + line_width;
@@ -43,8 +46,8 @@ while (cc < char_count) {
 	var yy = textbox_top + textbox_vpadding + line_current * line_spacing;
 	
 	// Changing text effect
-	dialogue_values_changer(effects, effect_options, cc - breaks, effects_max, -1, -1);
-	switch (effect_options[0]) {
+	effects.Change(cc - breaks, -1);
+	switch (effects.current_value) {
 		case ds_effects.SHAKING:
 			xx += random_range(-0.5, 0.5);
 			yy += random_range(-0.5, 0.5);
@@ -70,12 +73,20 @@ while (cc < char_count) {
 		break;
 	}
 	
+	highlights.Change(cc - breaks, -1);
+	
+	var h = highlights.current_value;
+	if (h != -1) {
+		// Not the best implementation but fine for now
+		draw_rectangle_colour(xx, yy, xx + w, yy + line_spacing, h, h, h, h, false);
+	}
+	
 	// Changing text colour and font
-	dialogue_values_changer(colours, colour_options, cc - breaks, colours_max, draw_set_colour, 0);
-	dialogue_values_changer(fonts, font_options, cc - breaks, fonts_max, draw_set_font, 0);
+	colours.Change(cc - breaks, draw_set_colour);
+	fonts.Change(cc - breaks, draw_set_font);
 	draw_text(xx, yy, char);
 	
-	line_width += string_width(char);
+	line_width += w;
 	cc++;
 }
 

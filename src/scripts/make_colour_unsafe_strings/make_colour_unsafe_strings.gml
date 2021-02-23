@@ -11,9 +11,9 @@ function make_colour_unsafe_strings(colour_space, ch_a, ch_b, ch_c) {
 		switch (colour_space) {
 			case "rgb": return make_colour_rgb(a, b, c);
 			case "hsv": return make_colour_hsv(a, b, c);
-			default: return c_white;
+			default: return undefined;
 		}
 	} else {
-		return c_white;	
+		return undefined;
 	}
 }

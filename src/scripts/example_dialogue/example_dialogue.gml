@@ -1,7 +1,7 @@
 /// @function example_dialogue()
 function example_dialogue() {
 	messages = [
-		"Welcome, [c:yellow][e:waving][f:DefaultCalibri]" + environment_get_variable("USERNAME"),
+		"Welcome, [h:yellow][c:black][e:waving]" + environment_get_variable("USERNAME"),
 		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur#adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.[q:0]",
 		
 		"When the text of the question ends, the main dialogue continues.",

@@ -19,7 +19,7 @@ if (char_count == msg_length) {
 	}
 	
 	// Options selection
-	if (skip_enabled && keyboard_check_pressed(vk_up)) {
+	if (keyboard_check_pressed(vk_up)) {
 		if (options_cursor > 0) {
 			options_cursor--;
 		} else {
@@ -37,8 +37,9 @@ if (char_count == msg_length) {
 }
 
 // Completion output of the current message
-if (keyboard_check_pressed(vk_shift)) {
+if (skip_enabled && keyboard_check_pressed(vk_shift)) {
 	char_count = msg_length;
+	event_user(2); // Triggering sprites and images to change
 }
 
 // Textspeed controller

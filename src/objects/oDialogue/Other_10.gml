@@ -40,23 +40,23 @@ autoprocess_enabled = false;
 skip_enabled = true;
 dialogue_is_paused = false;
 
+// Draw related stuff
+colours.ResetAll(default_colour);
+effects.ResetAll(default_effect);
+fonts.ResetAll(default_font);
+highlights.ResetAll(-1);
+
+// ..everything else
+sounds.ResetAll(-1);
+sprites.ResetAll(-1);
+images.ResetAll(0);
+textspeeds.ResetAll(default_textspeed);
+
 var omitted = 0;
 var breaks = 0;
 
-colours = [];
-colours_max = 0;
-effects = [];
-effects_max = 0;
-fonts = [];
-fonts_max = 0;
-
-textspeeds = [];
-textspeeds_max = 0;
-sprites = [];
-sprites_max = 0;
-images = [];
-images_max = 0;
-
+char_count = 0;
+char_limit = msg_length;
 ffbreaks = 0;
 ff = 0;
 
@@ -97,31 +97,48 @@ for (var i = 0; i < msg_length; i++) {
 				command_valid = true;
 			break;
 			
+			case "chr":
+			case "character": // Sets dialogue character preset
+				var character = global.mapcharacters[? values[1]];
+				if (!is_undefined(character)) dialogue_set_character(character);
+				event_perform(ev_alarm, 2);
+				command_valid = true;
+			break;
+			
 			case "c":
 			case "color":
 			case "colour": // Sets text colour
+			case "h":
+			case "highlight": // Sets text highlight colour
 				var colour;
-				if (values[1] == "rgb" || values[1] == "hsv") { // Parsing rgb / hsv colour
+				if (values[1] == "rgb" || values[1] == "hsv") {
 					colour = make_colour_unsafe_strings(values[1], values[2], values[3], values[4]);
-					command_valid = true;
-				} else { // Picking predefined colour
+				} else {
 					colour = global.mapcolours[? values[1]];
-					if (is_undefined(colour)) colour = default_colour;
-					command_valid = true;
 				}
 				
-				if (command_valid) {
-					array_push(colours, [colour, i - breaks - omitted]);
-					colours_max++;
+				if (is_undefined(colour)) colour = default_colour;
+				if (string_char_at(values[0], 1) == "c") {
+					array_push(colours.values, [colour, i - breaks - omitted, 0]);
+					colours.size++;
+				} else {
+					array_push(highlights.values, [colour, i - breaks - omitted, 0]);
+					highlights.size++;	
 				}
+				command_valid = true;
+			break;
+			
+			case "d":
+			case "delay":
+				// TODO: delays and unskipable delays
 			break;
 			
 			case "e":
 			case "effect": // Sets text effect
 				var effect = global.mapeffects[? values[1]];
 				if (is_undefined(effect)) effect = default_effect;
-				array_push(effects, [effect, i - breaks - omitted]);
-				effects_max++;
+				array_push(effects.values, [effect, i - breaks - omitted, 0]);
+				effects.size++;
 				command_valid = true;
 			break;
 			
@@ -133,8 +150,8 @@ for (var i = 0; i < msg_length; i++) {
 			case "font": // Sets text font
 				var font = asset_get_index(values[1]);
 				if (font == -1) { font = default_font; }
-				array_push(fonts, [font, i - breaks - omitted]);
-				fonts_max++;
+				array_push(fonts.values, [font, i - breaks - omitted, 0]);
+				fonts.size++;
 				command_valid = true;
 			break;
 			
@@ -165,24 +182,13 @@ for (var i = 0; i < msg_length; i++) {
 				}
 			break;
 			
-			case "h":
-			case "character": // Sets dialogue character preset
-				var character = global.mapcharacters[? values[1]];
-				if (!is_undefined(character)) dialogue_set_character(character);
-				dialogue_gui_slider = 0;
-				event_perform(ev_alarm, 2);
-				command_valid = true;
-			break;
-			
 			case "i":
-			case "index": // Changes character image index
-				var sliding = 1;
+			case "index": // Changes sprite image index
 				var index = string_digits(values[1]);
 				if (index != "") {
-					index = real(index);
-					if (values_count >= 3) { sliding = bool(values[2]); }
-					array_push(images, [index, i - breaks - omitted, sliding]);
-					images_max++;
+					var sliding = values[2] == undefined ? true : bool(values[2]);
+					array_push(images.values, [real(index), i - breaks - omitted, sliding]);
+					images.size++;
 					command_valid = true;
 				}
 			break;
@@ -217,17 +223,21 @@ for (var i = 0; i < msg_length; i++) {
 			break;
 			
 			case "snd": // Plays a sound
-				/// TODO: make this
+				var sound = asset_get_index(values[1]);
+				if (sound != -1) {
+					array_push(sounds.values, [sound, i - breaks - omitted, 0]);
+					sounds.size++;
+					command_valid = true;
+				}
 			break;
 			
 			case "spr":
-			case "sprite": // Changes character sprite index
-				var sliding = 1;
+			case "sprite": // Changes sprite index
 				var sprite = asset_get_index(values[1]);
 				if (sprite != -1) {
-					if (values_count >= 3) { sliding = bool(values[2]); }
-					array_push(sprites, [sprite, i - breaks - omitted, sliding]);
-					sprites_max++;
+					var sliding = values[2] == undefined ? true : bool(values[2]);
+					array_push(sprites.values, [sprite, i - breaks - omitted, sliding]);
+					sprites.size++;
 					command_valid = true;
 				}
 			break;
@@ -235,8 +245,8 @@ for (var i = 0; i < msg_length; i++) {
 			case "ts": // Sets text speed
 				var ts = global.mapspeeds[? values[1]];
 				if (is_undefined(ts)) ts = default_textspeed;
-				array_push(textspeeds, [ts, i - breaks - omitted]);
-				textspeeds_max++;
+				array_push(textspeeds.values, [ts, i - breaks - omitted, 0]);
+				textspeeds.size++;
 				command_valid = true;
 			break;
 			
@@ -271,13 +281,13 @@ for (var i = 0; i < msg_length; i++) {
 msg_chars = char_array_remove(msg_chars, "");
 msg_length -= omitted;
 
-/// Reset sprite and image options
-dialogue_values_reset(sprite_options, -1, 0, (sprites_max > 0) ? sprites[0][1] : -1); sprite_options[3] = 1;
-dialogue_values_changer(sprites, sprite_options, 0, sprites_max, dialogue_change_sprite, -1);
+/// Setting initial sprite and image index
+sounds.Reset(-1);
+sprites.Reset(-1);
+images.Reset(0);
+event_user(2);
 
-dialogue_values_reset(image_options, 0, 0, (images_max > 0) ? images[0][1] : -1); image_options[3] = 1;
-dialogue_values_changer(images, image_options, 0, images_max, dialogue_change_image, -1);
-
+// Ending if message is empty
 if (msg_length - breaks <= 0) {
 	event_user(0); exit;
 }
@@ -295,9 +305,9 @@ if (dialogue_gui_character_sprite_index != -1) {
 }
 
 breaks = 0;
+fonts.Reset(default_font);
+fonts.Change(0, draw_set_font);
 
-draw_set_font(default_font);
-dialogue_values_reset(font_options, default_font, 0, (fonts_max > 0) ? fonts[0][1] : -1);
 for (var i = 0; i < msg_length; i++) {
 	var word_width = 0;
 	var word_wrap = i;
@@ -308,7 +318,8 @@ for (var i = 0; i < msg_length; i++) {
 	}
 	
 	while (word_wrap < msg_length) {
-		dialogue_values_changer(fonts, font_options, word_wrap - breaks, fonts_max, draw_set_font, 0);
+		fonts.Change(word_wrap - breaks, draw_set_font);
+		
 		var char = msg_chars[word_wrap];
 		if (char == "#") {
 			line_width = 0;
@@ -339,10 +350,5 @@ for (var i = 0; i < msg_length; i++) {
 }
 
 // Setting initial textspeed
-char_count = 0;
-char_limit = msg_length;
-
-textspeed = default_textspeed;
-textspeed_cursor = 0;
-textspeed_pos = (textspeeds_max > 0) ? textspeeds[0][1] : -1;
+textspeeds.Reset(default_textspeed);
 event_user(1);
