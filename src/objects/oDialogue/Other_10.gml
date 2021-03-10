@@ -2,7 +2,9 @@
 msg_end = array_length(dialogue);
 
 // Check for the last message in the dialogue
-if (msg_current >= msg_end) {
+if (popped || msg_current >= msg_end) {
+	popped = false;
+	
 	if (ds_stack_size(dialogue_stack) > 0) {
 		var pop = ds_stack_pop(dialogue_stack);
 		if (pop[0] == -1) {
@@ -37,8 +39,8 @@ options_cursor = 0;
 autoprocess = false;
 autoprocess_delay = 0;
 autoprocess_enabled = false;
-skip_enabled = true;
 dialogue_is_paused = false;
+skip_enabled = true;
 
 // Draw related stuff
 colours.ResetAll(default_colour);
@@ -47,6 +49,7 @@ fonts.ResetAll(default_font);
 highlights.ResetAll(-1);
 
 // ..everything else
+delays.ResetAll(0);
 sounds.ResetAll(-1);
 sprites.ResetAll(-1);
 images.ResetAll(0);
@@ -117,28 +120,32 @@ for (var i = 0; i < msg_length; i++) {
 					colour = global.mapcolours[? values[1]];
 				}
 				
-				if (is_undefined(colour)) colour = default_colour;
+				var un = is_undefined(colour);
+				colour = default_colour * un + colour * !un;
+				
 				if (string_char_at(values[0], 1) == "c") {
-					array_push(colours.values, [colour, i - breaks - omitted, 0]);
-					colours.size++;
+					colours.Put(colour, i - breaks - omitted, 0);
 				} else {
-					array_push(highlights.values, [colour, i - breaks - omitted, 0]);
-					highlights.size++;	
+					highlights.Put(colour, i - breaks - omitted, 0);
 				}
 				command_valid = true;
 			break;
 			
 			case "d":
 			case "delay":
-				// TODO: delays and unskipable delays
+				var delay = string_digits(values[1]);
+				if (delay != "") {
+					var unskippable = values[2] == undefined ? false : bool(values[2]);
+					delays.Put(delay, i - breaks - omitted, unskippable);
+					command_valid = true;
+				}
 			break;
 			
 			case "e":
 			case "effect": // Sets text effect
 				var effect = global.mapeffects[? values[1]];
 				if (is_undefined(effect)) effect = default_effect;
-				array_push(effects.values, [effect, i - breaks - omitted, 0]);
-				effects.size++;
+				effects.Put(effect, i - breaks - omitted, 0);
 				command_valid = true;
 			break;
 			
@@ -150,8 +157,7 @@ for (var i = 0; i < msg_length; i++) {
 			case "font": // Sets text font
 				var font = asset_get_index(values[1]);
 				if (font == -1) { font = default_font; }
-				array_push(fonts.values, [font, i - breaks - omitted, 0]);
-				fonts.size++;
+				fonts.Put(font, i - breaks - omitted, 0);
 				command_valid = true;
 			break;
 			
@@ -187,8 +193,7 @@ for (var i = 0; i < msg_length; i++) {
 				var index = string_digits(values[1]);
 				if (index != "") {
 					var sliding = values[2] == undefined ? true : bool(values[2]);
-					array_push(images.values, [real(index), i - breaks - omitted, sliding]);
-					images.size++;
+					images.Put(real(index), i - breaks - omitted, sliding);
 					command_valid = true;
 				}
 			break;
@@ -222,11 +227,15 @@ for (var i = 0; i < msg_length; i++) {
 				command_valid = true;
 			break;
 			
+			case "pop": // Leaves current branch
+				popped = true;
+				event_user(0); exit;
+			break;
+			
 			case "snd": // Plays a sound
 				var sound = asset_get_index(values[1]);
 				if (sound != -1) {
-					array_push(sounds.values, [sound, i - breaks - omitted, 0]);
-					sounds.size++;
+					sounds.Put(sound, i - breaks - omitted, 0);
 					command_valid = true;
 				}
 			break;
@@ -236,8 +245,7 @@ for (var i = 0; i < msg_length; i++) {
 				var sprite = asset_get_index(values[1]);
 				if (sprite != -1) {
 					var sliding = values[2] == undefined ? true : bool(values[2]);
-					array_push(sprites.values, [sprite, i - breaks - omitted, sliding]);
-					sprites.size++;
+					sprites.Put(sprite, i - breaks - omitted, sliding);
 					command_valid = true;
 				}
 			break;
@@ -245,8 +253,7 @@ for (var i = 0; i < msg_length; i++) {
 			case "ts": // Sets text speed
 				var ts = global.mapspeeds[? values[1]];
 				if (is_undefined(ts)) ts = default_textspeed;
-				array_push(textspeeds.values, [ts, i - breaks - omitted, 0]);
-				textspeeds.size++;
+				textspeeds.Put(ts, i - breaks - omitted, 0);
 				command_valid = true;
 			break;
 			
@@ -282,6 +289,7 @@ msg_chars = char_array_remove(msg_chars, "");
 msg_length -= omitted;
 
 /// Setting initial sprite and image index
+delays.Reset(0);
 sounds.Reset(-1);
 sprites.Reset(-1);
 images.Reset(0);
@@ -293,16 +301,11 @@ if (msg_length - breaks <= 0) {
 }
 
 // Word wrapping algorithm
-var line_maxwidth = textbox_width - textbox_hpadding * 2;
+var line_maxwidth = textbox_width - textbox_hpadding * 2 -
+	(textbox_options_width + textbox_hpadding / 2) * question_asked -
+	(dialogue_gui_character_image_x + dialogue_gui_character_image_width - textbox_left) *
+	(dialogue_gui_character_sprite_index != -1);
 var line_width = 0;
-
-if (question_asked) {
-	line_maxwidth -= textbox_options_width + textbox_hpadding / 2;	
-}
-
-if (dialogue_gui_character_sprite_index != -1) {
-	line_maxwidth -= dialogue_gui_character_image_x + dialogue_gui_character_image_width - textbox_left;
-}
 
 breaks = 0;
 fonts.Reset(default_font);

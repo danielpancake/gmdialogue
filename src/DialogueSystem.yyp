@@ -10,7 +10,7 @@
     {"id":{"name":"DefaultCalibri","path":"fonts/DefaultCalibri/DefaultCalibri.yy",},"order":1,},
     {"id":{"name":"dialogue_setup","path":"scripts/dialogue_setup/dialogue_setup.yy",},"order":4,},
     {"id":{"name":"dialogue_structures","path":"scripts/dialogue_structures/dialogue_structures.yy",},"order":5,},
-    {"id":{"name":"DefaultArial","path":"fonts/DefaultArial/DefaultArial.yy",},"order":0,},
+    {"id":{"name":"DefaultComic","path":"fonts/DefaultComic/DefaultComic.yy",},"order":0,},
     {"id":{"name":"dialogue_open","path":"scripts/dialogue_open/dialogue_open.yy",},"order":1,},
     {"id":{"name":"sImageTemplate","path":"sprites/sImageTemplate/sImageTemplate.yy",},"order":0,},
     {"id":{"name":"oDialogue","path":"objects/oDialogue/oDialogue.yy",},"order":2,},

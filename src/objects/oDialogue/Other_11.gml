@@ -36,5 +36,9 @@ if (lookahead != -1) {
 	char_sublimit = lookahead[0] + 1;
 }
 
-char_count = clamp(char_count + textspeeds.current_value, 0, min(char_limit, char_sublimit));
+/// User delays
+var delay = delays.options[0];
+delay = (delay == -1) ? char_limit : delay;
+
+char_count = clamp(char_count + textspeeds.current_value, 0, min(char_limit, char_sublimit, delay));
 event_user(2);

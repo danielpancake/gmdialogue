@@ -1,10 +1,17 @@
+/// @function DialogueOptions(default_value)
 /// @description Creates new data structure which handles all changing values
 function DialogueOptions(_default_value) constructor {
 	current_value = _default_value;
 	current_extra = 0;
-	values = [_default_value, -1, 0]; // [value, position, extra]
-	options = [-1, 0]; // [current position, count]
+	values = [];		// [ [value, position, extra], ... ]
+	options = [-1, 0];	// [current position, count]
 	size = 0;
+	
+	/// @function Put(value, position, extra)
+	static Put = function(value, position, extra) {
+		array_push(self.values, [value, position, extra]);
+		self.size++;
+	}
 	
 	/// @function Reset(default_value)
 	static Reset = function(_default_value) {

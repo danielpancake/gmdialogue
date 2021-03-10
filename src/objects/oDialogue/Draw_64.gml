@@ -21,7 +21,7 @@ draw_set_valign(fa_top);
 colours.Reset(default_colour);
 effects.Reset(default_effect);
 fonts.Reset(default_font);
-highlights.Reset(dialogue_background_colour);
+highlights.Reset(-1);
 
 // Drawing dialogue text
 while (cc < char_count) {

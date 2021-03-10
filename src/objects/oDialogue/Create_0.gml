@@ -1,5 +1,6 @@
 /// @description Variables
 dialogue_stack = ds_stack_create();
+popped = false;
 
 dialogue_background_colour = c_black;
 dialogue_gui_width = 480;
@@ -8,7 +9,7 @@ dialogue_gui_slider = 0;
 
 default_colour = c_white;
 default_effect = ds_effects.NORMAL;
-default_font = DefaultArial;
+default_font = DefaultComic;
 default_textspeed = 1;
 
 colours = new DialogueOptions(default_colour);
@@ -16,6 +17,7 @@ effects = new DialogueOptions(default_effect);
 fonts = new DialogueOptions(default_font);
 highlights = new DialogueOptions(-1);
 
+delays = new DialogueOptions(0);
 sounds = new DialogueOptions(-1);
 sprites = new DialogueOptions(-1);
 images = new DialogueOptions(0);
@@ -40,6 +42,11 @@ dialogue_change_sprite = function(value, sliding) {
 dialogue_change_image = function(value, sliding) {
 	dialogue_gui_character_image_index = value;
 	if (sliding) { event_perform(ev_alarm, 2); }
+}
+
+dialogue_delay = function(value) {
+	alarm[0] = value;
+	dialogue_is_paused = true;
 }
 
 dialogue_play_sound = function(value) {

@@ -4,7 +4,7 @@ function dialogue_set_layout(index) {
 	switch (index) {
 		default:
 		case -1: // Default
-			default_font = DefaultArial;
+			default_font = DefaultComic;
 			
 			textbox_left = 32;
 			textbox_width = dialogue_gui_width - textbox_left * 2;
@@ -23,7 +23,7 @@ function dialogue_set_layout(index) {
 		break;
 		
 		case 1: // Layout 32x24 for "Bad Apple" showcase
-			default_font = DefaultArial;
+			default_font = DefaultComic;
 			line_spacing = 10;
 			
 			// Or use monospaced font
