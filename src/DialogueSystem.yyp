@@ -1,7 +1,7 @@
 {
   "resources": [
     {"id":{"name":"dialogue_set_layout","path":"scripts/dialogue_set_layout/dialogue_set_layout.yy",},"order":3,},
-    {"id":{"name":"make_colour_unsafe_strings","path":"scripts/make_colour_unsafe_strings/make_colour_unsafe_strings.yy",},"order":6,},
+    {"id":{"name":"make_colour_string","path":"scripts/make_colour_string/make_colour_string.yy",},"order":6,},
     {"id":{"name":"example_dialogue","path":"scripts/example_dialogue/example_dialogue.yy",},"order":0,},
     {"id":{"name":"example_room","path":"rooms/example_room/example_room.yy",},"order":4,},
     {"id":{"name":"string_to_array","path":"scripts/string_to_array/string_to_array.yy",},"order":0,},

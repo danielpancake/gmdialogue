@@ -6,7 +6,7 @@
     "path": "folders/Dialogue System/DS Scripts.yy",
   },
   "resourceVersion": "1.0",
-  "name": "make_colour_unsafe_strings",
+  "name": "make_colour_string",
   "tags": [],
   "resourceType": "GMScript",
 }

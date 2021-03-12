@@ -8,16 +8,17 @@ function dialogue_open_at(index, arguments, position) {
 	}
 	
 	with (oDialogue) {
-		questions = [];
-		dialogue_set_layout(-1);
-		dialogue_set_character(-1);
-		script_execute_ext(index, arguments);
-		
-		dialogue = messages;
 		stack_index = [-1, -1];
 		stack_option = 0;
 		
+		questions = [];
+		script_execute_ext(index, arguments);
+		
+		dialogue = messages;
 		msg_current = position;
+		msg_end = array_length(dialogue);
+		
+		dialogue_set_layout(-1);
 		event_user(0);
 	}
 }
@@ -38,7 +39,9 @@ function dialogue_load_file(filename) {
 	
 	var f = file_text_open_read(filename);
 	while (!file_text_eof(f)) {
-		array_push(messages, file_text_readln(f));
+		array_push(messages, file_text_read_string(f));
+		// Ignore all /n and /r's at the end of the lines
+		file_text_readln(f);
 	}
 	file_text_close(f);
 }

@@ -12,6 +12,7 @@ default_effect = ds_effects.NORMAL;
 default_font = DefaultComic;
 default_textspeed = 1;
 
+#region Stuff that changes
 colours = new DialogueOptions(default_colour);
 effects = new DialogueOptions(default_effect);
 fonts = new DialogueOptions(default_font);
@@ -22,16 +23,17 @@ sounds = new DialogueOptions(-1);
 sprites = new DialogueOptions(-1);
 images = new DialogueOptions(0);
 textspeeds = new DialogueOptions(default_textspeed);
+#endregion
 
 question_options = [];
 question_answers = [];
 
 break_characters = ["!", "?", ".", ";", ":", ","];
-newline_characters = ["", "#"];
+newline_characters = ["", "\n"]; // Additional and main newline characters
 
 global.dialogue_is_open = true;
 
-_sin = 0
+_sin = 0;
 
 /* -- Local callback functions -- */
 dialogue_change_sprite = function(value, sliding) {
@@ -47,6 +49,19 @@ dialogue_change_image = function(value, sliding) {
 dialogue_delay = function(value) {
 	alarm[0] = value;
 	dialogue_is_paused = true;
+}
+
+dialogue_get_colour = function(value1, value2) {
+	var colour;
+	
+	if (value1 == "rgb" || value1 == "hsv") {
+		colour = make_colour_string(value1, value2);
+	} else {
+		colour = global.mapcolours[? value1];
+	}
+	
+	if (is_undefined(colour)) colour = default_colour;
+	return colour;
 }
 
 dialogue_play_sound = function(value) {

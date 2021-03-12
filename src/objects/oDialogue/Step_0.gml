@@ -13,6 +13,7 @@ if (char_count == msg_length) {
 			stack_index[0] = stack_index[1];
 			stack_option = options_cursor;
 			msg_current = 0;
+			msg_end = array_length(dialogue);
 		}
 		
 		event_user(0); // Parsing next message
@@ -34,27 +35,22 @@ if (char_count == msg_length) {
 			options_cursor = 0;
 		}
 	}
+} else if (!dialogue_is_paused) {
+	event_user(1); // Textspeed controller
 }
 
 // Completion output of the current message
 if (skip_enabled && keyboard_check_pressed(vk_shift)) {
-	var count = delays.options[1];
-	show_debug_message(count);
 	var delay = msg_length;
 	
-	if (delays.options[0] != -1 && count < delays.size) {
-		if (delays.values[count][2]) {
-			delay = delays.values[count][1];
+	if (delays.current_position != -1 && delays.current_count < delays.size) {
+		if (delays.values[delays.current_count][2]) {
+			delay = delays.values[delays.current_count][1];
 		}
 	}
 	
 	char_count = delay;
 	event_user(2); // Triggering sprites and images to change
-}
-
-// Textspeed controller
-if (!dialogue_is_paused) {
-	if (char_count < msg_length) { event_user(1); }
 }
 
 // Sin cycle

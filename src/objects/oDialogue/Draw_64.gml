@@ -27,10 +27,10 @@ highlights.Reset(-1);
 while (cc < char_count) {
 	var char = msg_chars[cc];
 	
-	if (char == "#") breaks++;
+	if (char == "\n") breaks++;
 	// "" used as second newline character
 	// Since it doesn't appear normally, it is used by the parser
-	if (char == "" || char == "#") {
+	if (char == "" || char == "\n") {
 		line_current++;
 		line_width = 0;
 		cc++;
@@ -94,8 +94,7 @@ while (cc < char_count) {
 if (line_current >= line_max) {
 	var nl = char_array_pos_any_range(msg_chars, ff, msg_length, newline_characters, false);
 	if (nl != -1) { ff = nl[0] + 1; }
-	
-	ffbreaks = char_array_count_range(msg_chars, 0, ff - 1, "#", false);
+	ffbreaks = char_array_count_range(msg_chars, 0, ff - 1, "\n", false);
 }
 
 // Showing question and its options
@@ -115,6 +114,7 @@ if (question_asked && char_count == msg_length) {
 	}
 }
 
+// Drawing sprite
 if (dialogue_gui_character_sprite_index != -1) {
 	draw_sprite(dialogue_gui_character_sprite_index, dialogue_gui_character_image_index,
 		dialogue_gui_character_image_x - dialogue_gui_character_image_width * (1 - dialogue_gui_slider),

@@ -59,6 +59,6 @@ function dialogue_setup() {
 	global.mapspeeds[? "fast"] = 2;
 	#endregion
 	
-	// Use this value to check if dialogue is opened
+	// Use this variable to check if dialogue is opened
 	global.dialogue_is_open = false;
 }

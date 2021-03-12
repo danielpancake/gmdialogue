@@ -1,6 +1,4 @@
-/// @description Parsing dialogue messages
-msg_end = array_length(dialogue);
-
+/// @description Parsing dialogue message
 // Check for the last message in the dialogue
 if (popped || msg_current >= msg_end) {
 	popped = false;
@@ -14,6 +12,7 @@ if (popped || msg_current >= msg_end) {
 		}
 		
 		msg_current = pop[1];
+		msg_end = array_length(dialogue);
 		event_user(0); exit;
 	}
 	
@@ -63,6 +62,9 @@ char_limit = msg_length;
 ffbreaks = 0;
 ff = 0;
 
+// Don't care about values presence anymore
+var values = array_create(8, undefined);
+
 // Parsing dialogue message
 for (var i = 0; i < msg_length; i++) {
 	var char = msg_chars[i];
@@ -73,17 +75,15 @@ for (var i = 0; i < msg_length; i++) {
 		if (command_length <= 0) continue;
 		
 		var values_count = char_array_count(msg_chars, i + 1, command_length, ":", false) + 1;
-		var values = array_create(8, undefined); // Don't care about values presence anymore 
 		
-		var jj = i + 1;
-		for (var j = 0; j < values_count; j++) {
+		for (var j = 0, jj = i + 1; j < values_count; j++) {
 			var colon_pos = char_array_pos_range(msg_chars, jj, i + command_length + 1, ":", false);
-			if (colon_pos == -1) {
-				values[j] = char_array_string(msg_chars, jj, i + command_length - jj + 1, false);
-				break;
-			} else {
-				values[j] = char_array_string(msg_chars, jj, colon_pos - jj, false);
-			}
+			var no_colon = (colon_pos == -1);
+			
+			values[j] = char_array_string(msg_chars, jj,
+				no_colon * (i + command_length + 1) + !no_colon * colon_pos - jj, false);
+				
+			if (no_colon) break;
 			jj = colon_pos + 1;
 		}
 		
@@ -95,7 +95,7 @@ for (var i = 0; i < msg_length; i++) {
 			
 			case "auto": // Autoproccess
 				var delay = string_digits(values[1]);
-				autoprocess_delay = delay == "" ? -1 : real(delay);
+				autoprocess_delay = (delay == "") ? -1 : real(delay);
 				autoprocess_enabled = true;
 				command_valid = true;
 			break;
@@ -111,23 +111,13 @@ for (var i = 0; i < msg_length; i++) {
 			case "c":
 			case "color":
 			case "colour": // Sets text colour
+				colours.Put(dialogue_get_colour(values[1], values[2]), i - breaks - omitted, 0);
+				command_valid = true;
+			break;
+			
 			case "h":
 			case "highlight": // Sets text highlight colour
-				var colour;
-				if (values[1] == "rgb" || values[1] == "hsv") {
-					colour = make_colour_unsafe_strings(values[1], values[2], values[3], values[4]);
-				} else {
-					colour = global.mapcolours[? values[1]];
-				}
-				
-				var un = is_undefined(colour);
-				colour = default_colour * un + colour * !un;
-				
-				if (string_char_at(values[0], 1) == "c") {
-					colours.Put(colour, i - breaks - omitted, 0);
-				} else {
-					highlights.Put(colour, i - breaks - omitted, 0);
-				}
+				highlights.Put(dialogue_get_colour(values[1], values[2]), i - breaks - omitted, 0);
 				command_valid = true;
 			break;
 			
@@ -135,8 +125,8 @@ for (var i = 0; i < msg_length; i++) {
 			case "delay":
 				var delay = string_digits(values[1]);
 				if (delay != "") {
-					var unskippable = values[2] == undefined ? false : bool(values[2]);
-					delays.Put(delay, i - breaks - omitted, unskippable);
+					var unskippable = (values[2] == undefined) ? false : bool(values[2]);
+					delays.Put(max(real(delay), 1), i - breaks - omitted, unskippable);
 					command_valid = true;
 				}
 			break;
@@ -192,7 +182,7 @@ for (var i = 0; i < msg_length; i++) {
 			case "index": // Changes sprite image index
 				var index = string_digits(values[1]);
 				if (index != "") {
-					var sliding = values[2] == undefined ? true : bool(values[2]);
+					var sliding = (values[2] == undefined) ? true : bool(values[2]);
 					images.Put(real(index), i - breaks - omitted, sliding);
 					command_valid = true;
 				}
@@ -259,7 +249,7 @@ for (var i = 0; i < msg_length; i++) {
 			
 			case "q":
 			case "question": // Shows question
-			var index = real(values[1]);
+				var index = real(values[1]);
 				if (index >= 0 && index < questions_count) {
 					var question = questions[index];
 					question_options = question[0];
@@ -279,7 +269,7 @@ for (var i = 0; i < msg_length; i++) {
 			omitted += command_length + 2;
 			i += command_length + 1;
 		}
-	} else if (char == "#") {
+	} else if (char == newline_characters[1]) {
 		breaks++;
 	}
 }
@@ -288,15 +278,15 @@ for (var i = 0; i < msg_length; i++) {
 msg_chars = char_array_remove(msg_chars, "");
 msg_length -= omitted;
 
-/// Setting initial sprite and image index
+// Setting initial sprite and image index
 delays.Reset(0);
 sounds.Reset(-1);
 sprites.Reset(-1);
 images.Reset(0);
-event_user(2);
 
 // Ending if message is empty
 if (msg_length - breaks <= 0) {
+	event_user(2); // Calling to apply changes
 	event_user(0); exit;
 }
 
@@ -324,7 +314,7 @@ for (var i = 0; i < msg_length; i++) {
 		fonts.Change(word_wrap - breaks, draw_set_font);
 		
 		var char = msg_chars[word_wrap];
-		if (char == "#") {
+		if (char == "\n") {
 			line_width = 0;
 			word_width = 0;
 		} else if (char == " " || word_width > line_maxwidth) {
@@ -338,7 +328,7 @@ for (var i = 0; i < msg_length; i++) {
 	
 	if (line_width + word_width > line_maxwidth) {
 		if (line_width == 0) {
-			msg_chars = char_array_insert(msg_chars, word_wrap - 1, "#", false);
+			msg_chars = char_array_insert(msg_chars, word_wrap - 1, "\n", false);
 			msg_length++;
 			breaks++;
 		} else {
