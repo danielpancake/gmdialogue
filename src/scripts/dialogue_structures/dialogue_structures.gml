@@ -5,7 +5,7 @@ function DialogueOptions(_default_value) constructor {
 	current_extra = 0;
 	current_position = -1;
 	current_value = _default_value;
-	values = [];		// [ [value, position, extra], ... ]
+	values = []; // [ [value, position, extra], ... ]
 	size = 0;
 	
 	/// @function Put(value, position, extra)

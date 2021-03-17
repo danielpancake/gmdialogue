@@ -7,6 +7,8 @@ function dialogue_add_question(index, option, answer) {
 	if (index >= 0) {
 		if (index >= array_length(questions)) {
 			array_insert(questions, index, [[], []]);
+		} else if (questions[index] == 0) {
+			questions[index] = [[], []];
 		}
 		
 		array_push(questions[index][0], option);

@@ -30,11 +30,11 @@ function dialogue_open(index, arguments) {
 	dialogue_open_at(index, arguments, 0);
 }
 
-/// @function dialogue_load_file(filename)
+/// @function dialogue_from_file(filename)
 /// @description This function loads dialogue messages from the file
-/// Usage (in dialogue): "... [open:dialogue_load_file:filename] ..."
+/// Usage (in dialogue): "... [open:dialogue_from_file:filename] ..."
 /// @argument {string} filename The name of the file to read from
-function dialogue_load_file(filename) {
+function dialogue_from_file(filename) {
 	messages = [];
 	
 	var f = file_text_open_read(filename);
