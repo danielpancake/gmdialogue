@@ -116,7 +116,8 @@ if (question_asked && char_count == msg_length) {
 
 // Drawing sprite
 if (dialogue_gui_character_sprite_index != -1) {
-	draw_sprite(dialogue_gui_character_sprite_index, dialogue_gui_character_image_index,
+	draw_sprite_ext(dialogue_gui_character_sprite_index, dialogue_gui_character_image_index,
 		dialogue_gui_character_image_x - dialogue_gui_character_image_width * (1 - dialogue_gui_slider),
-		dialogue_gui_character_image_y);
+		dialogue_gui_character_image_y, dialogue_gui_character_scale, dialogue_gui_character_scale * dialogue_ratio,
+		0, c_white, 1);
 }

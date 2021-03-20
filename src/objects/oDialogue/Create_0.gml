@@ -7,6 +7,8 @@ dialogue_gui_width = 480;
 dialogue_gui_height = 320;
 dialogue_gui_slider = 0;
 
+dialogue_ratio = (dialogue_gui_height * view_wport[view_current]) / (dialogue_gui_width * view_hport[view_current]);
+
 default_colour = c_white;
 default_effect = ds_effects.NORMAL;
 default_font = DefaultComic;

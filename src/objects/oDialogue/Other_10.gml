@@ -291,14 +291,15 @@ if (msg_length - breaks <= 0) {
 }
 
 // Word wrapping algorithm
-var line_maxwidth = textbox_width - textbox_hpadding * 2 -
+var line_maxwidth = max(textbox_width - textbox_hpadding * 2 -
 	(textbox_options_width + textbox_hpadding / 2) * question_asked -
 	(dialogue_gui_character_image_x + dialogue_gui_character_image_width - textbox_left) *
-	(dialogue_gui_character_sprite_index != -1);
+	(dialogue_gui_character_sprite_index != -1), 15);
 var line_width = 0;
 
 breaks = 0;
-fonts.Reset(default_font);
+
+draw_set_font(default_font);
 fonts.Change(0, draw_set_font);
 
 for (var i = 0; i < msg_length; i++) {
