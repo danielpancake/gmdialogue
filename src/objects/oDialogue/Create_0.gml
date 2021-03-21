@@ -6,6 +6,9 @@ dialogue_background_colour = c_black;
 dialogue_gui_width = 480;
 dialogue_gui_height = 320;
 dialogue_gui_slider = 0;
+dialogue_gui_fader = 0;
+dialogue_gui_fading_in = true;
+event_perform(ev_alarm, 3);
 
 dialogue_ratio = (dialogue_gui_height * view_wport[view_current]) / (dialogue_gui_width * view_hport[view_current]);
 

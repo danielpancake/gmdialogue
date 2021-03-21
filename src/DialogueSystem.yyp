@@ -7,6 +7,7 @@
     {"id":{"name":"string_to_array","path":"scripts/string_to_array/string_to_array.yy",},"order":0,},
     {"id":{"name":"dialogue_add_question","path":"scripts/dialogue_add_question/dialogue_add_question.yy",},"order":0,},
     {"id":{"name":"dialogue_set_character","path":"scripts/dialogue_set_character/dialogue_set_character.yy",},"order":2,},
+    {"id":{"name":"dialogue_destroy","path":"scripts/dialogue_destroy/dialogue_destroy.yy",},"order":7,},
     {"id":{"name":"DefaultCalibri","path":"fonts/DefaultCalibri/DefaultCalibri.yy",},"order":1,},
     {"id":{"name":"dialogue_setup","path":"scripts/dialogue_setup/dialogue_setup.yy",},"order":4,},
     {"id":{"name":"dialogue_structures","path":"scripts/dialogue_structures/dialogue_structures.yy",},"order":5,},

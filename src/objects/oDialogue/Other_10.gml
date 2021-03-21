@@ -16,7 +16,7 @@ if (popped || msg_current >= msg_end) {
 		event_user(0); exit;
 	}
 	
-	instance_destroy(); exit;
+	dialogue_destroy(); exit;
 }
 
 // Getting the message
@@ -140,7 +140,7 @@ for (var i = 0; i < msg_length; i++) {
 			break;
 			
 			case "exit": // Immediately closes dialogue
-				instance_destroy(); exit;
+				dialogue_destroy(); exit;
 			break;
 
 			case "f":
@@ -174,7 +174,7 @@ for (var i = 0; i < msg_length; i++) {
 						}
 					}
 					
-					instance_destroy(); // If the reference is absent, the dialogue ends
+					dialogue_destroy(); // If the reference is absent, the dialogue ends
 				}
 			break;
 			

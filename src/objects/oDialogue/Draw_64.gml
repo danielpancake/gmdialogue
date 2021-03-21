@@ -1,8 +1,8 @@
 /// @description Draw dialogue box and text
 display_set_gui_size(dialogue_gui_width, dialogue_gui_height);
 
+draw_set_alpha(dialogue_gui_fader);
 if (textbox_show) {
-	draw_set_alpha(1);
 	draw_set_colour(dialogue_background_colour);
 	draw_rectangle(textbox_left, textbox_top, textbox_left + textbox_width, textbox_top + textbox_height, false);
 }
@@ -116,8 +116,9 @@ if (question_asked && char_count == msg_length) {
 
 // Drawing sprite
 if (dialogue_gui_character_sprite_index != -1) {
+	var slider = (1 - (dialogue_gui_fading_in ? dialogue_gui_slider : dialogue_gui_fader));
 	draw_sprite_ext(dialogue_gui_character_sprite_index, dialogue_gui_character_image_index,
-		dialogue_gui_character_image_x - dialogue_gui_character_image_width * (1 - dialogue_gui_slider),
+		dialogue_gui_character_image_x - dialogue_gui_character_image_width * slider,
 		dialogue_gui_character_image_y, dialogue_gui_character_scale, dialogue_gui_character_scale * dialogue_ratio,
-		0, c_white, 1);
+		0, c_white, dialogue_gui_fader);
 }
