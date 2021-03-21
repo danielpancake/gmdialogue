@@ -300,6 +300,7 @@ var line_width = 0;
 breaks = 0;
 
 draw_set_font(default_font);
+fonts.Reset(default_font);
 fonts.Change(0, draw_set_font);
 
 for (var i = 0; i < msg_length; i++) {
