@@ -26,7 +26,7 @@ function dialogue_set_layout(index) {
 			default_font = DefaultComic;
 			line_spacing = 10;
 			
-			// Or use monospaced font
+			// Or use other monospaced fonts
 			draw_set_font(default_font);
 			textbox_width = string_width("0") * 32 + 1;
 			textbox_left = (dialogue_gui_width - textbox_width) / 2;

@@ -1,6 +1,6 @@
 /// @function example_dialogue()
 function example_dialogue() {
-	/* Load all external files */
+	/* Loading external files */
 	var file = file_find_first("*.txt", 0), nothing = true;
 	
 	while (file != "") {
@@ -14,7 +14,13 @@ function example_dialogue() {
 	messages = [
 		"Welcome, [h:yellow][c:black][e:waving]" + environment_get_variable("USERNAME"),
 		(nothing ? "" : "Which file do you want to open?[q:2]"),
-		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.[q:0]",
+		
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+			"sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet," +
+			"consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" +
+			"et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+			"sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.[q:0]",
 		
 		"When the text of the question ends, the main dialogue continues.",
 		"Play external file:",

@@ -11,6 +11,8 @@ function make_colour_string(colour_model, colour) {
 	
 	for (var i = 0, j = 0; i < 11 && j < 3; i++) {
 		var value = buffer_peek(buffer, i, buffer_u8) - 48;
+		// Any other characters than digits are treated as space
+		// Thus they show where a number ends
 		var in_range = value >= 0 && value <= 9;
 		
 		__colour[j] += (9 * __colour[j] + value) * in_range;

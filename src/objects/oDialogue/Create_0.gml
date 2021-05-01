@@ -1,4 +1,5 @@
 /// @description Variables
+question_map = ds_map_create();
 dialogue_stack = ds_stack_create();
 popped = false;
 

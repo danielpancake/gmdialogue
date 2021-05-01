@@ -30,7 +30,6 @@ if (msg_length == 0) {
 // Splitting the message into character array
 msg_chars = string_to_array(msg, msg_length);
 
-var questions_count = array_length(questions);
 question_asked = false;
 options_count = 0;
 options_cursor = 0;
@@ -62,16 +61,19 @@ char_limit = msg_length;
 ffbreaks = 0;
 ff = 0;
 
-// Don't care about values presence anymore
+// Don't care about values presence
+// Extend if more values are needed
 var values = array_create(8, undefined);
 
 // Parsing dialogue message
 for (var i = 0; i < msg_length; i++) {
 	var char = msg_chars[i];
 	
+	// Looking for command blocks
 	if (char == "[") {
 		var command_valid = true;
 		var command_length = char_array_pos_range(msg_chars, i + 1, msg_length, "]", false) - i - 1;
+		
 		if (command_length <= 0) continue;
 		
 		var values_count = char_array_count(msg_chars, i + 1, command_length, ":", false) + 1;
@@ -109,6 +111,7 @@ for (var i = 0; i < msg_length; i++) {
 			break;
 			
 			case "c":
+			case "col":
 			case "color":
 			case "colour": // Sets text colour
 				colours.Put(dialogue_get_colour(values[1], values[2]), i - breaks - omitted, 0);
@@ -160,13 +163,12 @@ for (var i = 0; i < msg_length; i++) {
 						var _msg = messages[k];
 						var ref_pos = string_pos("[#", _msg);
 						if (ref_pos != 0) {
-							var ref_number = real(
-								string_copy(_msg, ref_pos + 3,
-									string_pos("]", string_copy(_msg, ref_pos, string_length(_msg) - ref_pos + 1)) - 4
-								)
+							var ref_id = string_copy(_msg, ref_pos + 3,
+								string_pos("]", string_copy(_msg, ref_pos, string_length(_msg) - ref_pos + 1)) - 4
 							);
 							
-							if (ref_number == values[2]) {
+							if (ref_id == values[2]) {
+								ds_map_clear(question_map);
 								ds_stack_clear(dialogue_stack);
 								dialogue_open_at(gotoref_dialogue, [], k);
 								exit;
@@ -204,12 +206,11 @@ for (var i = 0; i < msg_length; i++) {
 			case "open": // Note that this command will clear dialogue stack!
 				var open_dialogue = asset_get_index(values[1]);
 				if (open_dialogue != -1) {
-					var args = array_create(values_count - 2, "");
-					if (values_count - 2 > 0) {
-						for (var i = 0; i < values_count - 2; i++;) {
-							args[i] = values[i + 2];
-						}
+					var args = array_create(max(0, values_count - 2), "");
+					for (var i = 0; i < values_count - 2; i++;) {
+						args[i] = values[i + 2];
 					}
+					ds_map_clear(question_map);
 					ds_stack_clear(dialogue_stack);
 					dialogue_open(open_dialogue, args);
 					exit;
@@ -249,12 +250,12 @@ for (var i = 0; i < msg_length; i++) {
 			
 			case "q":
 			case "question": // Shows question
-				var index = real(values[1]);
-				if (index >= 0 && index < questions_count) {
-					var question = questions[index];
+				var index = values[1];
+				var question = question_map[? index];
+				if (!is_undefined(question)) {
 					question_options = question[0];
 					question_answers = question[1];
-					options_count = array_length(question_options)
+					options_count = array_length(question_options);
 					if (array_length(question_answers) > 0 && options_count > 0) {
 						stack_index[1] = index;
 						question_asked = true;
@@ -262,9 +263,16 @@ for (var i = 0; i < msg_length; i++) {
 					}
 				}
 			break;
+			
+			/*
+			case "command name": // Brief description
+				// Command body
+				command_valid = true;
+			break;
+			*/
 		}
 		
-		if (command_valid) { // Removing valid command from the message
+		if (command_valid) { // Removing valid commands from the message
 			msg_chars = char_array_replace(msg_chars, i, command_length + 2, "", false);
 			omitted += command_length + 2;
 			i += command_length + 1;
@@ -291,6 +299,7 @@ if (msg_length - breaks <= 0) {
 }
 
 // Word wrapping algorithm
+
 var line_maxwidth = max(textbox_width - textbox_hpadding * 2 -
 	(textbox_options_width + textbox_hpadding / 2) * question_asked -
 	(dialogue_gui_character_image_x + dialogue_gui_character_image_width - textbox_left) *

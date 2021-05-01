@@ -11,7 +11,6 @@ function dialogue_open_at(index, arguments, position) {
 		stack_index = [-1, -1];
 		stack_option = 0;
 		
-		questions = [];
 		script_execute_ext(index, arguments);
 		
 		dialogue = messages;

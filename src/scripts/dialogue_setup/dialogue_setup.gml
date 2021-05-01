@@ -1,4 +1,4 @@
-// This script creates data structures required for the dialog parsing process
+// @description Creates data structures required for the dialog parsing process
 // Feel free to change these values or add new ones
 function dialogue_setup() {
 	#region Dialogue system colours map

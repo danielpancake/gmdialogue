@@ -77,8 +77,7 @@ while (cc < char_count) {
 	
 	var h = highlights.current_value;
 	if (h != -1) {
-		// Not the best implementation but fine for now
-		draw_rectangle_colour(xx, yy, xx + w, yy + line_spacing, h, h, h, h, false);
+		draw_sprite_ext(sDSHighlightBackground, 0, xx, yy, w + 1, line_spacing + 1, 0, h, 1);
 	}
 	
 	// Changing text colour and font
@@ -115,10 +114,13 @@ if (question_asked && char_count == msg_length) {
 }
 
 // Drawing sprite
+// Drawing sprite
 if (dialogue_gui_character_sprite_index != -1) {
 	var slider = (1 - (dialogue_gui_fading_in ? dialogue_gui_slider : dialogue_gui_fader));
 	draw_sprite_ext(dialogue_gui_character_sprite_index, dialogue_gui_character_image_index,
 		dialogue_gui_character_image_x - dialogue_gui_character_image_width * slider,
-		dialogue_gui_character_image_y, dialogue_gui_character_scale, dialogue_gui_character_scale * dialogue_ratio,
+		dialogue_gui_character_image_y,
+		dialogue_gui_character_image_scale,
+		dialogue_gui_character_image_scale * dialogue_ratio,
 		0, c_white, dialogue_gui_fader);
 }

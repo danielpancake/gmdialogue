@@ -1,17 +1,15 @@
 /// @function dialogue_add_question(index, option, answer)
-/// @argument {number} index The real number representing question index
-/// @argument {string} option The option text to be shown
+/// @argument {string} index Question name
+/// @argument {string} option Option text
 /// @argument {array} answer The array of messages to be displayed after selection
 // Should only be called inside dialogue script
 function dialogue_add_question(index, option, answer) {
-	if (index >= 0) {
-		if (index >= array_length(questions)) {
-			array_insert(questions, index, [[], []]);
-		} else if (questions[index] == 0) {
-			questions[index] = [[], []];
-		}
-		
-		array_push(questions[index][0], option);
-		array_push(questions[index][1], answer);
+	index = string(index); 
+	
+	if (is_undefined(question_map[? index])) {
+		question_map[? index] = [[], []];
 	}
+	
+	array_push(question_map[? index][0], option);
+	array_push(question_map[? index][1], answer);
 }
