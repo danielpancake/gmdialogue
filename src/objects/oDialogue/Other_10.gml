@@ -8,7 +8,7 @@ if (popped || msg_current >= msg_end) {
 		if (pop[0] == -1) {
 			dialogue = messages;
 		} else {
-			dialogue = questions[pop[0]][1][pop[2]];
+			dialogue = question_map[? pop[0]][1][pop[2]];
 		}
 		
 		msg_current = pop[1];
