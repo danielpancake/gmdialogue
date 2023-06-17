@@ -144,7 +144,6 @@ for (var i = 0; i < msg_length; i++) {
 			
 			case "exit": // Immediately closes dialogue
 				dialogue_destroy(); exit;
-			break;
 
 			case "f":
 			case "font": // Sets text font
@@ -220,8 +219,8 @@ for (var i = 0; i < msg_length; i++) {
 			
 			case "pop": // Leaves current branch
 				popped = true;
-				event_user(0); exit;
-			break;
+				event_user(0);
+			exit;
 			
 			case "snd": // Plays a sound
 				var sound = asset_get_index(values[1]);

@@ -1,0 +1,16 @@
+{
+  "FolderOrderSettings": [],
+  "ResourceOrderSettings": [
+    {"name":"dialogue_set_layout","order":3,"path":"scripts/dialogue_set_layout/dialogue_set_layout.yy",},
+    {"name":"make_colour_string","order":6,"path":"scripts/make_colour_string/make_colour_string.yy",},
+    {"name":"example_room","order":4,"path":"rooms/example_room/example_room.yy",},
+    {"name":"dialogue_set_character","order":2,"path":"scripts/dialogue_set_character/dialogue_set_character.yy",},
+    {"name":"dialogue_destroy","order":7,"path":"scripts/dialogue_destroy/dialogue_destroy.yy",},
+    {"name":"DefaultCalibri","order":1,"path":"fonts/DefaultCalibri/DefaultCalibri.yy",},
+    {"name":"dialogue_setup","order":4,"path":"scripts/dialogue_setup/dialogue_setup.yy",},
+    {"name":"dialogue_structures","order":5,"path":"scripts/dialogue_structures/dialogue_structures.yy",},
+    {"name":"sDSHighlightBackground","order":1,"path":"sprites/sDSHighlightBackground/sDSHighlightBackground.yy",},
+    {"name":"dialogue_open","order":1,"path":"scripts/dialogue_open/dialogue_open.yy",},
+    {"name":"oDialogue","order":2,"path":"objects/oDialogue/oDialogue.yy",},
+  ],
+}
