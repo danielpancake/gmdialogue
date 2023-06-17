@@ -43,33 +43,33 @@ _sin = 0;
 
 /* -- Local callback functions -- */
 dialogue_change_sprite = function(value, sliding) {
-	dialogue_gui_character_sprite_index = value;
-	if (sliding) { event_perform(ev_alarm, 2); }
+  dialogue_gui_character_sprite_index = value;
+  if (sliding) { event_perform(ev_alarm, 2); }
 }
 
 dialogue_change_image = function(value, sliding) {
-	dialogue_gui_character_image_index = value;
-	if (sliding) { event_perform(ev_alarm, 2); }
+  dialogue_gui_character_image_index = value;
+  if (sliding) { event_perform(ev_alarm, 2); }
 }
 
 dialogue_delay = function(value) {
-	alarm[0] = value;
-	dialogue_is_paused = true;
+  alarm[0] = value;
+  dialogue_is_paused = true;
 }
 
 dialogue_get_colour = function(value1, value2) {
-	var colour;
-	
-	if (value1 == "rgb" || value1 == "hsv") {
-		colour = make_colour_string(value1, value2);
-	} else {
-		colour = global.mapcolours[? value1];
-	}
-	
-	if (is_undefined(colour)) colour = default_colour;
-	return colour;
+  var colour;
+  
+  if (value1 == "rgb" || value1 == "hsv") {
+    colour = make_colour_string(value1, value2);
+  } else {
+    colour = global.mapcolours[? value1];
+  }
+  
+  if (is_undefined(colour)) colour = default_colour;
+  return colour;
 }
 
 dialogue_play_sound = function(value) {
-	audio_play_sound(value, 1, false);
+  audio_play_sound(value, 1, false);
 }
