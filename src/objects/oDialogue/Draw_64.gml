@@ -92,7 +92,7 @@ while (cc < char_count) {
 // Text autoscrolling
 if (line_current >= line_max) {
   var nl = char_array_pos_any_range(msg_chars, ff, msg_length, newline_characters, false);
-  if (nl != -1) { ff = nl[0] + 1; }
+  if (nl[0] != -1) { ff = nl[0] + 1; }
   ffbreaks = char_array_count_range(msg_chars, 0, ff - 1, "\n", false);
 }
 

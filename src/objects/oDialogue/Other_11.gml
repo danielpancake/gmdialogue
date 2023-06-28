@@ -17,7 +17,7 @@ if (textspeeds.current_position != -1) {
 // Punctuation delays
 var lookahead = char_array_pos_any(msg_chars, floor(char_count), textspeeds.current_value, break_characters, true);
 var char_sublimit = char_limit;
-if (lookahead != -1) {
+if (lookahead[0] != -1) {
   var delay;
   
   switch (lookahead[1]) {
