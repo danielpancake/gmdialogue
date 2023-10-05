@@ -115,6 +115,7 @@
   "italic": false,
   "kerningPairs": [],
   "last": 0,
+  "lineHeight": 0,
   "maintainGms1Font": false,
   "parent": {
     "name": "Fonts",
@@ -126,6 +127,7 @@
   ],
   "regenerateBitmap": false,
   "sampleText": "Comic Mono\r\n\r\nA legible monospace font... the very typeface\r\nyou’ve been trained to recognize since childhood.\r\n\r\nhttps://github.com/dtinth/comic-mono-font",
+  "sdfSpread": 8,
   "size": 12.0,
   "styleName": "Normal",
   "textureGroupId": {
@@ -133,4 +135,5 @@
     "path": "texturegroups/Default",
   },
   "TTFName": "",
+  "usesSDF": false,
 }
