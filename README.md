@@ -1,12 +1,15 @@
 # gmdialogue
+
 gmdialogue is a dialogue system for GameMaker Studio 2.3+ that uses command blocks to apply effects to the text
 
 ## Usage
+
 Before ever using this dialogue system be sure to put `dialogue_setup();` somewhere in the beginning of the game. This function will create small data structures needed for parsing. Values of these structures can be changed as you wish.
 
 Dialogues used with this asset are stored as gml **scripts** of **functions**. To open dialogue call `dialogue_open(dialogue, [ arg1, arg2, arg3 ]);`, where `dialogue` is the name of the script or function (global or local) which contains dialogue. Script or function parameters are passed in the form of a value array.
 
 Dialogue script / function must contain an array of strings named `messages`. E.g.:
+
 ```gml
 function example_dialogue() {
     messages = [
@@ -34,6 +37,7 @@ Dialogue messages are plain strings. There are different **command blocks** whic
 Each command block has the following structure: in square brackets, name of the command followed by none or up to 8 values all separated with colons `[name:value:value:value]`.
 
 ### Command blocks
+
 Here is a table of the available commands. Some elements of this table include aspects of the dialogue system which will be discussed later. For some commands such as `colour`, `effect`, `font`, `highlight`, `image index`, `sound`, etc., position matters.
 
 | Name | Syntax | Values | Description |
@@ -59,6 +63,7 @@ Here is a table of the available commands. Some elements of this table include a
 | Question | `[q:index]`<br/>`[question:index]`| `index` — question name | Shows question |
 
 ### Questions and branching (kind of)
+
 There is just one function `dialogue_add_question();` and one command `[q:]` for working with questions. A question consists of options and answers. Similarly to dialogues, the answer is an array of messages. New questions are created inside the dialogue function with `dialogue_add_question(index, option, []);` function, where `index` is a name of the question, it is used in `[q:]` command. To create a question with multiple choices call `dialogue_add_question();` with the same question's name multiple times.
 
 When answer-dialogue (sub-dialogue) ends, previous dialogue continues. This hierarchy is called **dialogue stack**.
@@ -82,8 +87,10 @@ function example_dialogue() {
     ]);
 }
 ```
+
 Output of this dialogue will be as following:
-```
+
+```output
 Line 1
 Line 2
 Line 3
@@ -93,9 +100,10 @@ Line 6
 Line 7
 ```
 
-Besides, it is possible to use `[open:]` command to switch between dialogues imperceptibly. 
+Besides, it is possible to use `[open:]` command to switch between dialogues imperceptibly.
 
 Thank you for checking out this asset!
 
 ## Requirements
+
 - GameMaker Studio 2.3+
