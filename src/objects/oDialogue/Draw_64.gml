@@ -1,4 +1,7 @@
 /// @description Draw dialogue box and text
+var _init_gui_w = display_get_gui_width();
+var _init_gui_h = display_get_gui_height();
+
 display_set_gui_size(dialogue_gui_width, dialogue_gui_height);
 
 draw_set_alpha(dialogue_gui_fader);
@@ -114,7 +117,6 @@ if (question_asked && char_count == msg_length) {
 }
 
 // Drawing sprite
-// Drawing sprite
 if (dialogue_gui_character_sprite_index != -1) {
   var slider = (1 - (dialogue_gui_fading_in ? dialogue_gui_slider : dialogue_gui_fader));
   draw_sprite_ext(dialogue_gui_character_sprite_index, dialogue_gui_character_image_index,
@@ -124,3 +126,7 @@ if (dialogue_gui_character_sprite_index != -1) {
     dialogue_gui_character_image_scale * dialogue_ratio,
     0, c_white, dialogue_gui_fader);
 }
+
+// Leave draw alpha and gui size intact from other systems
+draw_set_alpha(1);
+display_set_gui_size(_init_gui_w, _init_gui_h);
