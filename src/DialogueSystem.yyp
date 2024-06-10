@@ -1,54 +1,59 @@
 {
-  "resourceType": "GMProject",
-  "resourceVersion": "1.7",
-  "name": "DialogueSystem",
-  "AudioGroups": [
-    {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},
+  "$GMProject":"",
+  "%Name":"DialogueSystem",
+  "AudioGroups":[
+    {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
-  "configs": {
-    "children": [],
-    "name": "Default",
+  "configs":{
+    "children":[],
+    "name":"Default",
   },
-  "defaultScriptType": 1,
-  "Folders": [
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Dialogue System","folderPath":"folders/Dialogue System.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"DS Scripts","folderPath":"folders/Dialogue System/DS Scripts.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"DS Sprites","folderPath":"folders/Dialogue System/DS Sprites.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Dialogues","folderPath":"folders/Dialogues.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Fonts","folderPath":"folders/Fonts.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Scripts","folderPath":"folders/Scripts.yy",},
+  "defaultScriptType":1,
+  "Folders":[
+    {"$GMFolder":"","%Name":"Dialogue System","folderPath":"folders/Dialogue System.yy","name":"Dialogue System","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"DS Scripts","folderPath":"folders/Dialogue System/DS Scripts.yy","name":"DS Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"DS Sprites","folderPath":"folders/Dialogue System/DS Sprites.yy","name":"DS Sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Dialogues","folderPath":"folders/Dialogues.yy","name":"Dialogues","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Fonts","folderPath":"folders/Fonts.yy","name":"Fonts","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
-  "IncludedFiles": [
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"badapple.txt","CopyToMask":-1,"filePath":"datafiles",},
+  "IncludedFiles":[
+    {"$GMIncludedFile":"","%Name":"badapple.txt","CopyToMask":-1,"filePath":"datafiles","name":"badapple.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"characters_example.txt","CopyToMask":-1,"filePath":"datafiles","name":"characters_example.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"method_test.txt","CopyToMask":-1,"filePath":"datafiles","name":"method_test.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
   ],
-  "isEcma": false,
-  "LibraryEmitters": [],
-  "MetaData": {
-    "IDEVersion": "2023.8.1.102",
+  "isEcma":false,
+  "LibraryEmitters":[],
+  "MetaData":{
+    "IDEVersion":"2024.2.0.132",
   },
-  "resources": [
-    {"id":{"name":"dialogue_set_layout","path":"scripts/dialogue_set_layout/dialogue_set_layout.yy",},},
-    {"id":{"name":"make_colour_string","path":"scripts/make_colour_string/make_colour_string.yy",},},
-    {"id":{"name":"example_dialogue","path":"scripts/example_dialogue/example_dialogue.yy",},},
-    {"id":{"name":"example_room","path":"rooms/example_room/example_room.yy",},},
-    {"id":{"name":"string_to_array","path":"scripts/string_to_array/string_to_array.yy",},},
-    {"id":{"name":"dialogue_add_question","path":"scripts/dialogue_add_question/dialogue_add_question.yy",},},
-    {"id":{"name":"dialogue_set_character","path":"scripts/dialogue_set_character/dialogue_set_character.yy",},},
-    {"id":{"name":"dialogue_destroy","path":"scripts/dialogue_destroy/dialogue_destroy.yy",},},
+  "name":"DialogueSystem",
+  "resources":[
     {"id":{"name":"DefaultCalibri","path":"fonts/DefaultCalibri/DefaultCalibri.yy",},},
+    {"id":{"name":"DefaultComic","path":"fonts/DefaultComic/DefaultComic.yy",},},
+    {"id":{"name":"oDialogue","path":"objects/oDialogue/oDialogue.yy",},},
+    {"id":{"name":"example_room","path":"rooms/example_room/example_room.yy",},},
+    {"id":{"name":"dialogue_add_question","path":"scripts/dialogue_add_question/dialogue_add_question.yy",},},
+    {"id":{"name":"dialogue_destroy","path":"scripts/dialogue_destroy/dialogue_destroy.yy",},},
+    {"id":{"name":"dialogue_open","path":"scripts/dialogue_open/dialogue_open.yy",},},
+    {"id":{"name":"dialogue_set_character","path":"scripts/dialogue_set_character/dialogue_set_character.yy",},},
+    {"id":{"name":"dialogue_set_layout","path":"scripts/dialogue_set_layout/dialogue_set_layout.yy",},},
     {"id":{"name":"dialogue_setup","path":"scripts/dialogue_setup/dialogue_setup.yy",},},
     {"id":{"name":"dialogue_structures","path":"scripts/dialogue_structures/dialogue_structures.yy",},},
-    {"id":{"name":"DefaultComic","path":"fonts/DefaultComic/DefaultComic.yy",},},
+    {"id":{"name":"example_dialogue","path":"scripts/example_dialogue/example_dialogue.yy",},},
+    {"id":{"name":"make_colour_string","path":"scripts/make_colour_string/make_colour_string.yy",},},
+    {"id":{"name":"test_alert","path":"scripts/test_alert/test_alert.yy",},},
+    {"id":{"name":"string_to_array","path":"scripts/string_to_array/string_to_array.yy",},},
     {"id":{"name":"sDSHighlightBackground","path":"sprites/sDSHighlightBackground/sDSHighlightBackground.yy",},},
-    {"id":{"name":"dialogue_open","path":"scripts/dialogue_open/dialogue_open.yy",},},
     {"id":{"name":"sImageTemplate","path":"sprites/sImageTemplate/sImageTemplate.yy",},},
-    {"id":{"name":"oDialogue","path":"objects/oDialogue/oDialogue.yy",},},
   ],
-  "RoomOrderNodes": [
+  "resourceType":"GMProject",
+  "resourceVersion":"2.0",
+  "RoomOrderNodes":[
     {"roomId":{"name":"example_room","path":"rooms/example_room/example_room.yy",},},
   ],
-  "templateType": null,
-  "TextureGroups": [
-    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"targets":-1,},
+  "templateType":null,
+  "TextureGroups":[
+    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
   ],
 }

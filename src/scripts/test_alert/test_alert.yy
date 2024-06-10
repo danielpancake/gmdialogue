@@ -1,12 +1,12 @@
 {
   "$GMScript":"",
-  "%Name":"example_dialogue",
+  "%Name":"test_alert",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"example_dialogue",
+  "name":"test_alert",
   "parent":{
-    "name":"Dialogues",
-    "path":"folders/Dialogues.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

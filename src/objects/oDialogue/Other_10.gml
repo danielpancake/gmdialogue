@@ -196,12 +196,23 @@ for (var i = 0; i < msg_length; i++) {
         command_valid = true;
       break;
       
+      case "method": // Call a method
+        var method_name = asset_get_index(values[1]);
+        if (is_callable(method_name)) {
+          var args = array_create(max(0, values_count - 2), "");
+          for (var i = 0; i < values_count - 2; i++;) {
+            args[i] = values[i + 2];
+          }
+          method_call(method_name, args);
+        }
+      break;
+      
       case "noskip": // Disables skip
         skip_enabled = false;
         command_valid = true;
       break;
       
-      case "o":  // Opens specified dialogue
+      case "o":    // Opens specified dialogue
       case "open": // Note that this command will clear dialogue stack!
         var open_dialogue = asset_get_index(values[1]);
         if (open_dialogue != -1) {

@@ -1,0 +1,6 @@
+This example shows how different characters in the dialogue system work.
+[e:waving]gmdialogue[e:] has two characters built-in: default one and Mr. Rectangle
+[chr:rectangle]Hi!
+[chr:default]Both characters are stored in the dialogue_set_character.
+global.mapcharacters is used to assign string used in tags to the actual values.
+So new characters are added by setting up values in the dialogue_set_character and when adding a value in the global.mapcharacters.
