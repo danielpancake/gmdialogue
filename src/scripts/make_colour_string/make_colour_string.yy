@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"make_colour_string",
   "isCompatibility":false,
   "isDnD":false,

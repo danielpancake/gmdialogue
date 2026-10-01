@@ -1,8 +1,8 @@
 {
-  "$GMProject":"",
+  "$GMProject":"v1",
   "%Name":"DialogueSystem",
   "AudioGroups":[
-    {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
     "children":[],
@@ -17,6 +17,7 @@
     {"$GMFolder":"","%Name":"Fonts","folderPath":"folders/Fonts.yy","name":"Fonts","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
+  "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
     {"$GMIncludedFile":"","%Name":"badapple.txt","CopyToMask":-1,"filePath":"datafiles","name":"badapple.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"characters_example.txt","CopyToMask":-1,"filePath":"datafiles","name":"characters_example.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -25,7 +26,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.2.0.132",
+    "IDEVersion":"2026.0.0.16",
   },
   "name":"DialogueSystem",
   "resources":[
@@ -42,8 +43,8 @@
     {"id":{"name":"dialogue_structures","path":"scripts/dialogue_structures/dialogue_structures.yy",},},
     {"id":{"name":"example_dialogue","path":"scripts/example_dialogue/example_dialogue.yy",},},
     {"id":{"name":"make_colour_string","path":"scripts/make_colour_string/make_colour_string.yy",},},
-    {"id":{"name":"test_alert","path":"scripts/test_alert/test_alert.yy",},},
     {"id":{"name":"string_to_array","path":"scripts/string_to_array/string_to_array.yy",},},
+    {"id":{"name":"test_alert","path":"scripts/test_alert/test_alert.yy",},},
     {"id":{"name":"sDSHighlightBackground","path":"sprites/sDSHighlightBackground/sDSHighlightBackground.yy",},},
     {"id":{"name":"sImageTemplate","path":"sprites/sImageTemplate/sImageTemplate.yy",},},
   ],

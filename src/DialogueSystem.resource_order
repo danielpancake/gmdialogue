@@ -11,6 +11,7 @@
     {"name":"dialogue_setup","order":4,"path":"scripts/dialogue_setup/dialogue_setup.yy",},
     {"name":"dialogue_structures","order":5,"path":"scripts/dialogue_structures/dialogue_structures.yy",},
     {"name":"make_colour_string","order":6,"path":"scripts/make_colour_string/make_colour_string.yy",},
+    {"name":"string_to_array","order":8,"path":"scripts/string_to_array/string_to_array.yy",},
     {"name":"test_alert","order":1,"path":"scripts/test_alert/test_alert.yy",},
     {"name":"sDSHighlightBackground","order":1,"path":"sprites/sDSHighlightBackground/sDSHighlightBackground.yy",},
   ],

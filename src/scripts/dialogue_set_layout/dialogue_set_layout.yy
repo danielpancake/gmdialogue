@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"dialogue_set_layout",
   "isCompatibility":false,
   "isDnD":false,
