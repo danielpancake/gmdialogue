@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"dialogue_set_character",
+  "%Name":"string_to_array",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"dialogue_set_character",
+  "name":"string_to_array",
   "parent":{
     "name":"DS Scripts",
     "path":"folders/Dialogue System/DS Scripts.yy",

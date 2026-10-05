@@ -1,0 +1,2 @@
+The next message will call a method!
+[method:test_alert:hello!]

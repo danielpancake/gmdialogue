@@ -9,6 +9,7 @@ function example_dialogue() {
     file = file_find_next();
   }
   file_find_close();
+  dialogue_add_question(2, "Game menu example", ["[open:menu_text]"]);
   dialogue_add_question(2, "Skip", [""]);
   
   messages = [
@@ -35,4 +36,16 @@ function example_dialogue() {
   
   dialogue_add_question(1, "Yeah", ["[open:example_dialogue]"]);
   dialogue_add_question(1, "No", ["Bye!"]);
+}
+
+/// @function menu_text()
+function menu_text() {
+  messages = ["* Game Title / Main menu *[q:0]", ""];
+  
+  dialogue_add_question(0, "Play", [
+    "[open:menu_text]"
+  ]);
+  dialogue_add_question(0, "Quit", [
+    "Bye bye"
+  ]);
 }

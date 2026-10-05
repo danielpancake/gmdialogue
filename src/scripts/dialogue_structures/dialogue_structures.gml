@@ -32,7 +32,9 @@ function DialogueOptions(_default_value) constructor {
     while (current_position != -1 && position >= current_position) {
       current_value = values[current_count][0];
       current_extra = values[current_count][2];
-      current_position = (current_count < size - 1) ? values[++current_count][1] : -1;
+      
+      current_position = (current_count < size - 1) ? values[current_count + 1][1] : -1;
+      current_count += 1;
       
       if (callback != -1) { 
         if (extra) {

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"dialogue_open",
+  "%Name":"test_alert",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"dialogue_open",
+  "name":"test_alert",
   "parent":{
-    "name":"DS Scripts",
-    "path":"folders/Dialogue System/DS Scripts.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

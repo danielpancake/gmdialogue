@@ -15,12 +15,15 @@ if (textspeeds.current_position != -1) {
 }
 
 // Punctuation delays
-var lookahead = char_array_pos_any(msg_chars, floor(char_count), textspeeds.current_value, break_characters, true);
+// Bound the search since character-array helpers no longer clamp indices.
+var lookahead_index = clamp(floor(char_count), 0, msg_length);
+var lookahead_count = clamp(textspeeds.current_value, 0, msg_length - lookahead_index);
+var lookahead = char_array_pos_any_match_slice(msg_chars, lookahead_index, lookahead_count, break_characters);
 var char_sublimit = char_limit;
-if (lookahead[0] != -1) {
+if (lookahead.position != -1) {
   var delay;
   
-  switch (lookahead[1]) {
+  switch (lookahead.char) {
     case "!":
     case "?":
     case ".":
@@ -35,7 +38,7 @@ if (lookahead[0] != -1) {
   }
   
   dialogue_delay(max(delay / textspeeds.current_value, 15));
-  char_sublimit = lookahead[0] + 1;
+  char_sublimit = lookahead.position + 1;
 }
 
 // User defined delays

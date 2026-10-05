@@ -72,18 +72,18 @@ for (var i = 0; i < msg_length; i++) {
   // Looking for command blocks
   if (char == "[") {
     var command_valid = true;
-    var command_length = char_array_pos_range(msg_chars, i + 1, msg_length, "]", false) - i - 1;
+    var command_length = char_array_pos_range(msg_chars, i + 1, msg_length, "]") - i - 1;
     
     if (command_length <= 0) continue;
     
-    var values_count = char_array_count(msg_chars, i + 1, command_length, ":", false) + 1;
+    var values_count = char_array_count_slice(msg_chars, i + 1, command_length, ":") + 1;
     
     for (var j = 0, jj = i + 1; j < values_count; j++) {
-      var colon_pos = char_array_pos_range(msg_chars, jj, i + command_length + 1, ":", false);
+      var colon_pos = char_array_pos_range(msg_chars, jj, i + command_length + 1, ":");
       var no_colon = (colon_pos == -1);
       
-      values[j] = char_array_string(msg_chars, jj,
-        no_colon * (i + command_length + 1) + !no_colon * colon_pos - jj, false);
+      values[j] = char_array_string_slice(msg_chars, jj,
+        no_colon * (i + command_length + 1) + !no_colon * colon_pos - jj);
         
       if (no_colon) break;
       jj = colon_pos + 1;
@@ -196,12 +196,23 @@ for (var i = 0; i < msg_length; i++) {
         command_valid = true;
       break;
       
+      case "method": // Call a method
+        var method_name = asset_get_index(values[1]);
+        if (is_callable(method_name)) {
+          var args = array_create(max(0, values_count - 2), "");
+          for (var i = 0; i < values_count - 2; i++;) {
+            args[i] = values[i + 2];
+          }
+          method_call(method_name, args);
+        }
+      break;
+      
       case "noskip": // Disables skip
         skip_enabled = false;
         command_valid = true;
       break;
       
-      case "o":  // Opens specified dialogue
+      case "o":    // Opens specified dialogue
       case "open": // Note that this command will clear dialogue stack!
         var open_dialogue = asset_get_index(values[1]);
         if (open_dialogue != -1) {
@@ -272,7 +283,7 @@ for (var i = 0; i < msg_length; i++) {
     }
     
     if (command_valid) { // Removing valid commands from the message
-      msg_chars = char_array_replace(msg_chars, i, command_length + 2, "", false);
+      msg_chars = char_array_set_slice(msg_chars, i, command_length + 2, "");
       omitted += command_length + 2;
       i += command_length + 1;
     }
@@ -338,7 +349,7 @@ for (var i = 0; i < msg_length; i++) {
   
   if (line_width + word_width > line_maxwidth) {
     if (line_width == 0) {
-      msg_chars = char_array_insert(msg_chars, word_wrap - 1, "\n", false);
+      msg_chars = char_array_insert(msg_chars, word_wrap - 1, "\n");
       msg_length++;
       breaks++;
     } else {
