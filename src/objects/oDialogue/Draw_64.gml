@@ -1,20 +1,27 @@
 /// @description Draw dialogue box and text
-var _init_gui_w = display_get_gui_width();
-var _init_gui_h = display_get_gui_height();
+// Drawn in dialogue_gui_width x dialogue_gui_height, scaled to the GUI without changing its size
+var _init_matrix = matrix_get(matrix_world);
+matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0,
+  display_get_gui_width() / dialogue_gui_width, display_get_gui_height() / dialogue_gui_height, 1));
 
-display_set_gui_size(dialogue_gui_width, dialogue_gui_height);
+var _init_alpha = draw_get_alpha();
+var _init_colour = draw_get_colour();
+var _init_font = draw_get_font();
+var _init_halign = draw_get_halign();
+var _init_valign = draw_get_valign();
+
+// Portrait aspect ratio correction
+var _window_w = window_get_width();
+var _window_h = window_get_height();
+if (_window_w > 0 && _window_h > 0) {
+  dialogue_ratio = (dialogue_gui_height * _window_w) / (dialogue_gui_width * _window_h);
+}
 
 draw_set_alpha(dialogue_gui_fader);
 if (textbox_show) {
   draw_set_colour(dialogue_background_colour);
   draw_rectangle(textbox_left, textbox_top, textbox_left + textbox_width, textbox_top + textbox_height, false);
 }
-
-var breaks = ffbreaks;
-var cc = ff;
-
-var line_current = 0;
-var line_width = 0;
 
 draw_set_colour(default_colour);
 draw_set_font(default_font);
@@ -27,92 +34,74 @@ fonts.Reset(default_font);
 highlights.Reset(-1);
 
 // Drawing dialogue text
-while (cc < char_count) {
+var cc = (scroll_line < array_length(msg_line_start)) ? msg_line_start[scroll_line] : msg_length;
+for (; cc < char_count && cc < msg_length; cc++) {
+  effects.Change(cc, -1);
+  highlights.Change(cc, -1);
+  colours.Change(cc, draw_set_colour);
+  fonts.Change(cc, draw_set_font);
+
+  if (msg_x[cc] < 0) continue; // Line break
+
   var char = msg_chars[cc];
-  
-  if (char == "\n") breaks++;
-  // "" used as second newline character
-  // Since it doesn't appear normally, it is used by the parser
-  if (char == "" || char == "\n") {
-    line_current++;
-    line_width = 0;
-    cc++;
-    continue;
-  }
-  
-  var w = string_width(char);
-  
-  var xx = (dialogue_gui_character_sprite_index != -1 ?
-    dialogue_gui_character_image_x + dialogue_gui_character_image_width : textbox_left) +
-    textbox_hpadding + line_width;
-    
-  var yy = textbox_top + textbox_vpadding + line_current * line_spacing;
-  
+  var w = msg_w[cc];
+  var xx = msg_text_left + msg_x[cc];
+  var yy = msg_text_top + (msg_line[cc] - scroll_line) * line_spacing;
+
   // Changing text effect
-  effects.Change(cc - breaks, -1);
   switch (effects.current_value) {
     case ds_effects.SHAKING:
       xx += random_range(-0.5, 0.5);
       yy += random_range(-0.5, 0.5);
     break;
-    
+
     case ds_effects.QUIVERING:
       xx += irandom_range(-1, 1);
       yy += irandom_range(-1, 1);
     break;
-    
+
     case ds_effects.FLOATING:
       yy -= sin(degtorad(_sin - xx));
     break;
-    
+
     case ds_effects.BOUNCING:
       yy -= abs(sin(degtorad(_sin - xx))) * 2;
     break;
-    
+
     case ds_effects.WAVING:
-      var offset = sin(degtorad(textbox_left + textbox_hpadding + line_width + _sin));
+      var offset = sin(degtorad(textbox_left + textbox_hpadding + msg_x[cc] + _sin));
       xx += offset;
       yy += offset * 2;
     break;
   }
-  
-  highlights.Change(cc - breaks, -1);
-  
+
+  // Exact size, overlaps would show while fading
   var h = highlights.current_value;
   if (h != -1) {
-    draw_sprite_ext(sDSHighlightBackground, 0, xx, yy, w + 1, line_spacing + 1, 0, h, 1);
+    draw_sprite_ext(sDSHighlightBackground, 0, xx, yy, w, line_spacing, 0, h, dialogue_gui_fader);
   }
-  
-  // Changing text colour and font
-  colours.Change(cc - breaks, draw_set_colour);
-  fonts.Change(cc - breaks, draw_set_font);
-  draw_text(xx, yy, char);
-  
-  line_width += w;
-  cc++;
-}
 
-// Text autoscrolling
-if (line_current >= line_max) {
-  var nl = char_array_pos_any_match_range(msg_chars, ff, msg_length, newline_characters);
-  if (nl.position != -1) { ff = nl.position + 1; }
-  ffbreaks = char_array_count_range(msg_chars, 0, ff - 1, "\n");
+  draw_text(xx, yy, char);
 }
 
 // Showing question and its options
-if (question_asked && char_count == msg_length) {
-  for (var i = 0; i < options_count; i++) {
-    var option = question_options[i];
-    
+if (question_asked && char_count >= msg_length) {
+  draw_set_font(default_font);
+  var options_first = clamp(options_cursor - line_max + 1, 0, max(options_count - line_max, 0));
+  var options_last = min(options_first + line_max, options_count);
+
+  for (var i = options_first; i < options_last; i++) {
+    var option = msg_options[i];
+
     if (i == options_cursor) {
-      draw_set_colour(c_yellow);
-      option = "> " + option;
+      draw_set_colour(dialogue_option_selected_colour);
+      option = dialogue_option_cursor + option;
     } else {
-      draw_set_colour(c_white);
+      draw_set_colour(dialogue_option_colour);
     }
-    
-    draw_text(textbox_left + textbox_width - textbox_hpadding - textbox_options_width,
-      textbox_top + textbox_vpadding + i * line_spacing, option);
+
+    draw_text(textbox_left + textbox_width - textbox_hpadding - msg_options_width,
+      textbox_top + textbox_vpadding + (i - options_first) * line_spacing, option);
   }
 }
 
@@ -127,6 +116,10 @@ if (dialogue_gui_character_sprite_index != -1) {
     0, c_white, dialogue_gui_fader);
 }
 
-// Leave draw alpha and gui size intact from other systems
-draw_set_alpha(1);
-display_set_gui_size(_init_gui_w, _init_gui_h);
+// Leave draw settings intact for other systems
+draw_set_alpha(_init_alpha);
+draw_set_colour(_init_colour);
+draw_set_font(_init_font);
+draw_set_halign(_init_halign);
+draw_set_valign(_init_valign);
+matrix_set(matrix_world, _init_matrix);

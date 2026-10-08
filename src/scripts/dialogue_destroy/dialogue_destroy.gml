@@ -1,9 +1,9 @@
 /// @description Closes the dialogue
 function dialogue_destroy() {
-  if (global.dialogue_is_open) {
-    with (oDialogue) {
+  with (oDialogue) {
+    if (dialogue_gui_fading_in) {
       dialogue_gui_fading_in = false;
-      event_perform(ev_alarm, 3);
+      if (alarm[3] < 0) { alarm[3] = 1; }
     }
   }
 }
