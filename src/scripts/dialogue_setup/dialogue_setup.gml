@@ -1,6 +1,10 @@
 // @description Creates data structures required for the dialog parsing process
 // Feel free to change these values or add new ones
+// Safe to call more than once, dialogue_open() calls it too
 function dialogue_setup() {
+  if (variable_global_exists("__dialogue_ready") && global.__dialogue_ready) exit;
+  global.__dialogue_ready = true;
+
   #region Dialogue system colours map
   global.mapcolours = ds_map_create();
   global.mapcolours[? "aqua"] = c_aqua;
@@ -58,7 +62,18 @@ function dialogue_setup() {
   global.mapspeeds[? "normal"] = 1;
   global.mapspeeds[? "fast"] = 2;
   #endregion
-  
-  // Use this variable to check if dialogue is opened
-  global.dialogue_is_open = false;
+  #region Dialogue system input
+  // Replace these functions to use other input. An existing global.dialogue_input is kept
+  if (!variable_global_exists("dialogue_input")) {
+    global.dialogue_input = {
+      advance: function() { return keyboard_check_pressed(vk_enter); },
+      skip: function() { return keyboard_check_pressed(vk_shift); },
+      up: function() { return keyboard_check_pressed(vk_up); },
+      down: function() { return keyboard_check_pressed(vk_down); },
+    };
+  }
+  #endregion
 }
+
+// Use this variable to check if dialogue is opened
+global.dialogue_is_open = false;

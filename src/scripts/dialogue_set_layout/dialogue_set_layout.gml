@@ -27,8 +27,10 @@ function dialogue_set_layout(index) {
       line_spacing = 10;
       
       // Or use other monospaced fonts
+      var _font = draw_get_font();
       draw_set_font(default_font);
       textbox_width = string_width("0") * 32 + 1;
+      draw_set_font(_font);
       textbox_left = (dialogue_gui_width - textbox_width) / 2;
       textbox_height = line_spacing * 24;
       textbox_top = 32;
